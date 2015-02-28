@@ -1,0 +1,4 @@
+name: ${project.artifactId}
+main: main.java.me.thebmanswan541.SurvivalGames.SurvivalGames
+version: ${project.version}
+author: [TheBmanSwan]
