@@ -21,11 +21,11 @@ public class FileManager {
 
     private static final FileManager conf = new FileManager("config"), arenas = new FileManager("arenas");
 
-    public FileManager getConfig() {
+    public static FileManager getConfig() {
         return conf;
     }
 
-    public FileManager getArenas() {
+    public static FileManager getArenas() {
         return arenas;
     }
 
