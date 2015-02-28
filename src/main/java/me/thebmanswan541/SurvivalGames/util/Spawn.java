@@ -1,8 +1,4 @@
-package me.thebmanswan541.SurvivalGames;
-
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
+package me.thebmanswan541.SurvivalGames.util;
 
 /**
  * **********************************************************
@@ -14,10 +10,5 @@ import org.bukkit.plugin.java.JavaPlugin;
  * prohibited. Thanks.
  * **********************************************************
  */
-public class SurvivalGames extends JavaPlugin {
-
-    public static Plugin getPlugin() {
-        return Bukkit.getPluginManager().getPlugin("SurvivalGames");
-    }
-
+public class Spawn {
 }

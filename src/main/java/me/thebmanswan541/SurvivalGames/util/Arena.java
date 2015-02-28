@@ -1,8 +1,4 @@
-package me.thebmanswan541.SurvivalGames;
-
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
+package me.thebmanswan541.SurvivalGames.util;
 
 /**
  * **********************************************************
@@ -14,10 +10,22 @@ import org.bukkit.plugin.java.JavaPlugin;
  * prohibited. Thanks.
  * **********************************************************
  */
-public class SurvivalGames extends JavaPlugin {
+public class Arena {
 
-    public static Plugin getPlugin() {
-        return Bukkit.getPluginManager().getPlugin("SurvivalGames");
+    public enum ArenaState {
+        WAITING, COUNTDOWN, STARTING, IN_GAME, RESTARTING;
+    }
+
+    private ArenaState state;
+    private String id;
+
+    protected Arena(String id) {
+        this.id = id;
+        this.state = ArenaState.WAITING;
+    }
+
+    public String getID() {
+        return id;
     }
 
 }
