@@ -1,10 +1,14 @@
 package me.thebmanswan541.SurvivalGames.util;
 
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
+import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
 import me.thebmanswan541.SurvivalGames.managers.ScoreboardManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
 
 /**
  * **********************************************************
@@ -15,33 +19,89 @@ import org.bukkit.entity.Player;
  * Claiming this project to be created by you is strictly prohibited.
  * **********************************************************
  */
-public class Countdown implements Runnable{
+public class Countdown extends BukkitRunnable {
 
-    private static int countdownTime = 60;
+    private Arena a;
+    private int time;
+    private ArrayList<Integer> times;
 
-    public static int getCountdownTime() {
-        return countdownTime;
+    public Countdown(Arena a, int time, int... times) {
+        this.a = a;
+        this.time = time;
+        this.times = new ArrayList<Integer>();
+
+        for (int c : times) {
+            this.times.add(c);
+        }
     }
 
-    public static void setCountdownTime(int time) {
-        countdownTime = time;
+    public Integer getTimeLeft() {
+        return time;
     }
 
     @Override
     public void run() {
-        if (getCountdownTime() == 0) {
-            ScoreboardManager.cancelWaiting();
-          // TODO: start the game
-        } else if (getCountdownTime() == 30)  {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                p.sendMessage(SurvivalGames.tag+ ChatColor.YELLOW+"The game is starting in "+ChatColor.LIGHT_PURPLE+"30"+ChatColor.YELLOW+" seconds!");
+        if (time == 0) {
+            if (SurvivalGames.arena.isState(Arena.ArenaState.LOBBY_COUNTDOWN)) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    SurvivalGames.arena.addPlayer(p);
+                    p.sendMessage(ChatColor.BOLD + "======================================");
+                    p.sendMessage(" ");
+                    p.sendMessage(ChatColor.BOLD+"                   Survival Games");
+                    p.sendMessage(ChatColor.YELLOW+"                    §lLet the games begin!");
+                    p.sendMessage(" ");
+                    p.sendMessage(ChatColor.BOLD + "======================================");
+                    p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You will be able to move in 30 seconds! Choose a kit by right-clicking the Kit Selector!");
+                }
+                SurvivalGames.arena.setState(Arena.ArenaState.START_COUNTDOWN);
+                StartingListener.c.cancel();
+                StartingListener.c = new Countdown(SurvivalGames.arena, 30, 15, 10, 5, 4, 3, 2, 1);
+                StartingListener.c.runTaskTimer(SurvivalGames.getPlugin(), 0, 20);
+            }  else if (SurvivalGames.arena.isState(Arena.ArenaState.START_COUNTDOWN)) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    p.sendMessage(SurvivalGames.tag + ChatColor.YELLOW + "The games have begun! You will recieve your kit in 60 seconds! Invulnerability runs out in 20 seconds!");
+                }
+                SurvivalGames.arena.setState(Arena.ArenaState.GRACE_PERIOD);
+                StartingListener.c.cancel();
+                StartingListener.c = new Countdown(SurvivalGames.arena, 20, 10, 5, 4, 3, 2, 1);
+                StartingListener.c.runTaskTimer(SurvivalGames.getPlugin(), 0, 20);
+            } else if (SurvivalGames.arena.isState(Arena.ArenaState.GRACE_PERIOD)) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You no longer have invulnerability!");
+                }
+                SurvivalGames.arena.setState(Arena.ArenaState.IN_GAME);
+                StartingListener.c.cancel();
+                StartingListener.c = new Countdown(SurvivalGames.arena, 40, 30, 10, 5, 4, 3, 2, 1);
+                StartingListener.c.runTaskTimer(SurvivalGames.getPlugin(), 0, 20);
             }
-        } else if (getCountdownTime() <= 10) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                p.sendMessage(SurvivalGames.tag+ ChatColor.YELLOW+"The game is starting in "+ChatColor.LIGHT_PURPLE+countdownTime+ChatColor.YELLOW+" seconds!");
+            cancel();
+            return;
+        }
+        if (times.contains(time)) {
+            if (SurvivalGames.arena.isState(Arena.ArenaState.LOBBY_COUNTDOWN)) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    p.sendMessage(SurvivalGames.tag + ChatColor.YELLOW + "The game is starting in " + ChatColor.LIGHT_PURPLE + time + ChatColor.YELLOW + " seconds!");
+                }
+            } else if (SurvivalGames.arena.isState(Arena.ArenaState.START_COUNTDOWN)) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    p.sendMessage(SurvivalGames.tag + ChatColor.YELLOW + "You will be able to move in " + time + " seconds!");
+                }
+            } else if (SurvivalGames.arena.isState(Arena.ArenaState.GRACE_PERIOD)) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"Invulnerability wears off in "+time+" seconds!");
+                }
             }
         }
-        countdownTime--;
+        ScoreboardManager.refreshStartScoreboard();
+        time--;
+    }
+
+    public void stopCountdown() {
+        this.cancel();
+    }
+
+    public void setCountdownTime(int time) {
+        this.time = time;
     }
 
 }

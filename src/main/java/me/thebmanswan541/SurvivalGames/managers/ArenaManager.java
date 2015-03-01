@@ -61,10 +61,9 @@ public class ArenaManager {
     }
 
     public Arena getActiveArena() {
-        Arena a = null;
         Random r = new Random();
         int index = r.nextInt(getArenas().size());
-        a = getArenas().get(index);
+        Arena a = getArenas().get(index);
         return a;
     }
 

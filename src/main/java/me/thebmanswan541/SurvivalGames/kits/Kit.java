@@ -1,6 +1,8 @@
-package me.thebmanswan541.SurvivalGames.command;
+package me.thebmanswan541.SurvivalGames.kits;
 
-import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 /**
  * **********************************************************
@@ -11,16 +13,19 @@ import org.bukkit.entity.Player;
  * Claiming this project to be created by you is strictly prohibited.
  * **********************************************************
  */
-public interface SubCommand {
+public abstract class Kit {
 
-    /**
-     * @param player Command sender
-     * @param args SubCommand arguments
-     */
-    public boolean onCommand(Player player, String[] args);
+    private int id;
 
-    /**
-     * @param p Sends a help message of a specified SubCommand to the player
-     */
-    public String help(Player p);
+    public Kit(int id) {
+        this.id = id;
+    }
+
+    public abstract String getName();
+
+    public abstract Integer getID();
+
+    public abstract ItemStack getKitIcon();
+
+    public abstract List<ItemStack> getItems();
 }

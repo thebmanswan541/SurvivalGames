@@ -2,10 +2,10 @@ package me.thebmanswan541.SurvivalGames;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import me.thebmanswan541.SurvivalGames.command.CommandManager;
+import me.thebmanswan541.SurvivalGames.listeners.MoveListener;
 import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
 import me.thebmanswan541.SurvivalGames.managers.ArenaManager;
 import me.thebmanswan541.SurvivalGames.util.Arena;
-import me.thebmanswan541.SurvivalGames.util.Countdown;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -28,14 +28,16 @@ public class SurvivalGames extends JavaPlugin {
 
     public static String tag = ChatColor.GRAY+"["+ChatColor.RED+"SG"+ChatColor.GRAY+"]: ";
     public static Arena arena;
-    private static int countdownID;
 
     public void onEnable() {
         ArenaManager.getInstance().setup();
-        arena = ArenaManager.getInstance().getActiveArena();
+        if (ArenaManager.getInstance().getArenas().size() > 0) {
+            arena = ArenaManager.getInstance().getActiveArena();
+        }
         getCommand("sg").setExecutor(new CommandManager());
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new StartingListener(), this);
+        pm.registerEvents(new MoveListener(), this);
     }
 
     public static Plugin getPlugin() {
@@ -59,14 +61,6 @@ public class SurvivalGames extends JavaPlugin {
         float pitch = (float) location.getDouble("pitch");
         float yaw = (float) location.getDouble("yaw");
         return new Location(world, x, y, z, yaw, pitch);
-    }
-
-    public static void startCountdown() {
-        countdownID = Bukkit.getScheduler().scheduleSyncRepeatingTask(getPlugin(), new Countdown(), 0, 20);
-    }
-
-    public static void stopCountdown() {
-        Bukkit.getScheduler().cancelTask(countdownID);
     }
 
     public static WorldEditPlugin getWorldEdit() {

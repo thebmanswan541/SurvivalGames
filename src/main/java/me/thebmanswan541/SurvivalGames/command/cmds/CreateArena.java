@@ -21,18 +21,19 @@ import org.bukkit.permissions.Permission;
  */
 public class CreateArena implements SubCommand{
 
-    public static Permission createArena = new Permission("sg.createArena");
-
     @Override
     public boolean onCommand(Player player, String[] args) {
-        if (player.hasPermission(createArena)) {
-            if (args.length == 0) {
-                player.sendMessage(SurvivalGames.tag+ChatColor.RED + "Please specify a name for the arena!");
-                return true;
+        if (args.length == 0) {
+            player.sendMessage(SurvivalGames.tag + ChatColor.RED + "Please specify a name for the arena!");
+            return true;
+        }
+
+        if (args.length > 0) {
+            StringBuilder x = new StringBuilder();
+            for (int i = 0; i < args.length; i++) {
+                x.append(args[i] + " ");
             }
-
-            String name = args[0];
-
+            String name = x.toString().trim();
             if (ArenaManager.getInstance().getArena(name) != null) {
                 player.sendMessage(SurvivalGames.tag + ChatColor.RED + "An arena with this name already exists!");
                 return true;
@@ -41,24 +42,22 @@ public class CreateArena implements SubCommand{
             Selection sel = SurvivalGames.getWorldEdit().getSelection(player);
 
             if (sel == null) {
-                player.sendMessage(SurvivalGames.tag+ChatColor.RED+"Please make a WorldEdit selection of the arena.");
+                player.sendMessage(SurvivalGames.tag + ChatColor.RED + "Please make a WorldEdit selection of the arena.");
                 return true;
             }
             FileManager.getArenas().set(name + ".world", sel.getWorld().getName());
-            SurvivalGames.saveLocation(sel.getMinimumPoint(), FileManager.getArenas().createSection(name+".cornerA"));
-            SurvivalGames.saveLocation(sel.getMaximumPoint(), FileManager.getArenas().createSection(name+".cornerB"));
+            SurvivalGames.saveLocation(sel.getMinimumPoint(), FileManager.getArenas().createSection(name + ".cornerA"));
+            SurvivalGames.saveLocation(sel.getMaximumPoint(), FileManager.getArenas().createSection(name + ".cornerB"));
             FileManager.getArenas().save();
             ArenaManager.getInstance().setup();
-            player.sendMessage(SurvivalGames.tag+ChatColor.GREEN+"Created arena: "+name+". "+ChatColor.YELLOW+"Now you must set the lobby location and spawn locations!");
+            player.sendMessage(SurvivalGames.tag + ChatColor.GREEN + "Created arena: " + name + ". " + ChatColor.YELLOW + "Now you must set the lobby location and spawn locations!");
             return true;
-        } else {
-            player.sendMessage(SurvivalGames.tag+ChatColor.RED+"You do not have permission.");
         }
         return true;
     }
 
     @Override
     public String help(Player p) {
-        return "";
+        return "§l- "+ChatColor.RESET+ChatColor.RED+"/sg createarena <arenaname> "+ChatColor.GREEN+"- "+ChatColor.RED+"Creates an arena with a WorldEdit selection";
     }
 }

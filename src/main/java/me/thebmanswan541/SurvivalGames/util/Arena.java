@@ -23,7 +23,7 @@ import java.util.List;
 public class Arena {
 
     public enum ArenaState {
-        WAITING(ChatColor.WHITE, "Waiting..."), COUNTDOWN(ChatColor.BLUE, "Countdown"), STARTING(ChatColor.YELLOW, "Starting..."), GRACE_PERIOD(ChatColor.AQUA, "Grace Period"), IN_GAME(ChatColor.GOLD, "In-Game"), RESTARTING(ChatColor.RED, "Restarting...");
+        WAITING(ChatColor.WHITE, "Waiting..."), LOBBY_COUNTDOWN(ChatColor.BLUE, "Lobby Countdown"), START_COUNTDOWN(ChatColor.YELLOW, "Start Countdown"), GRACE_PERIOD(ChatColor.AQUA, "Grace Period"), IN_GAME(ChatColor.GOLD, "In-Game"), RESTARTING(ChatColor.RED, "Restarting...");
 
         private String name;
         private ChatColor color;
@@ -88,7 +88,17 @@ public class Arena {
      * @param player Adds player to the game.
      */
     public void addPlayer(Player player) {
+        for (Spawn spawn : spawns) {
+            if (!spawn.hasPlayer()) {
+                spawn.setPlayer(player);
+                player.teleport(spawn.getLocation());
+                break;
+            }
+        }
+
         players.add(player);
+        player.getInventory().clear();
+
     }
 
     /**
@@ -102,6 +112,10 @@ public class Arena {
 
     public List<Spawn> getSpawns() {
         return spawns;
+    }
+
+    public void addSpawn(Location location) {
+        spawns.add(new Spawn(location));
     }
 
     public ArenaState getState() {

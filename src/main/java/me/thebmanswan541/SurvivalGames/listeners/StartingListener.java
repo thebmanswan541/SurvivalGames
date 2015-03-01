@@ -26,31 +26,30 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class StartingListener implements Listener{
 
+    public static Countdown c;
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        if (SurvivalGames.arena.isState(Arena.ArenaState.WAITING) || SurvivalGames.arena.isState(Arena.ArenaState.COUNTDOWN)) {
-            try {
-                p.teleport(SurvivalGames.parseLocation(FileManager.getArenas().<ConfigurationSection>get(SurvivalGames.arena.getID() + ".lobby")));
-            }catch(Exception ex) {
-                ex.printStackTrace();
-                p.sendMessage(SurvivalGames.tag+ChatColor.RED+"Lobby or default arena has not been set up yet!");
-            }
-            ScoreboardManager.refreshStartScoreboard();
-            e.setJoinMessage(SurvivalGames.tag + ChatColor.AQUA + p.getName() + ChatColor.YELLOW + " joined the game " + ChatColor.YELLOW + "(" + ChatColor.LIGHT_PURPLE + Bukkit.getOnlinePlayers().size() + ChatColor.YELLOW + "/" + ChatColor.LIGHT_PURPLE + Bukkit.getMaxPlayers() + ChatColor.YELLOW + ")!");
-            SurvivalGames.arena.addPlayer(p);
-            if (Bukkit.getOnlinePlayers().size() == 8) {
-                SurvivalGames.arena.setState(Arena.ArenaState.COUNTDOWN);
-                ScoreboardManager.cancelWaiting();
-                for (Player pl : Bukkit.getOnlinePlayers()) {
-                    pl.sendMessage(SurvivalGames.tag + ChatColor.YELLOW + "The game is starting in " + ChatColor.LIGHT_PURPLE + "60" + ChatColor.YELLOW + " seconds!");
+        if (SurvivalGames.arena == null) {
+            p.sendMessage(SurvivalGames.tag+ChatColor.RED+"§lPlease create a default arena!");
+        } else {
+            if (SurvivalGames.arena.isState(Arena.ArenaState.WAITING) || SurvivalGames.arena.isState(Arena.ArenaState.LOBBY_COUNTDOWN)) {
+                try {
+                    p.teleport(SurvivalGames.parseLocation(FileManager.getArenas().<ConfigurationSection>get(SurvivalGames.arena.getID() + ".lobby")));
+                } catch (Exception ex) {
+                    p.sendMessage(SurvivalGames.tag + ChatColor.RED + "Lobby has not been set up yet!");
                 }
-                SurvivalGames.startCountdown();
                 ScoreboardManager.refreshStartScoreboard();
-            } else if (Bukkit.getOnlinePlayers().size() == 12 && Countdown.getCountdownTime() > 30) {
-                for (Player pl : Bukkit.getOnlinePlayers()) {
-                    pl.sendMessage(SurvivalGames.tag + ChatColor.YELLOW + "The game is starting in " + ChatColor.LIGHT_PURPLE + "30" + ChatColor.YELLOW + " seconds!");
-                    Countdown.setCountdownTime(30);
+                e.setJoinMessage(SurvivalGames.tag + ChatColor.AQUA + p.getName() + ChatColor.YELLOW + " joined the game " + ChatColor.YELLOW + "(" + ChatColor.LIGHT_PURPLE + Bukkit.getOnlinePlayers().size() + ChatColor.YELLOW + "/" + ChatColor.LIGHT_PURPLE + Bukkit.getMaxPlayers() + ChatColor.YELLOW + ")!");
+                if (Bukkit.getOnlinePlayers().size() == 1) {
+                    SurvivalGames.arena.setState(Arena.ArenaState.LOBBY_COUNTDOWN);
+                    ScoreboardManager.cancelWaiting();
+                    c = new Countdown(SurvivalGames.arena, 60, 60, 30, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+                    c.runTaskTimer(SurvivalGames.getPlugin(), 0, 20);
+                    ScoreboardManager.refreshStartScoreboard();
+                } else if (Bukkit.getOnlinePlayers().size() == 12 && c.getTimeLeft() > 30) {
+                    c.setCountdownTime(30);
                     ScoreboardManager.refreshStartScoreboard();
                 }
             }
@@ -60,15 +59,13 @@ public class StartingListener implements Listener{
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        if (SurvivalGames.arena.isState(Arena.ArenaState.WAITING) || SurvivalGames.arena.isState(Arena.ArenaState.COUNTDOWN)) {
+        if (SurvivalGames.arena.isState(Arena.ArenaState.WAITING) || SurvivalGames.arena.isState(Arena.ArenaState.LOBBY_COUNTDOWN)) {
             ScoreboardManager.refreshStartScoreboard();
             e.setQuitMessage(null);
-            SurvivalGames.arena.removePlayer(p);
-            if (Bukkit.getOnlinePlayers().size() < 8) {
+            if (Bukkit.getOnlinePlayers().size() < 8 && c.getTimeLeft() < 60) {
                 SurvivalGames.arena.setState(Arena.ArenaState.WAITING);
                 ScoreboardManager.refreshStartScoreboard();
-                SurvivalGames.stopCountdown();
-                Countdown.setCountdownTime(60);
+                c.stopCountdown();
             }
         }
     }

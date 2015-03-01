@@ -1,6 +1,7 @@
 package me.thebmanswan541.SurvivalGames.managers;
 
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
+import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
 import me.thebmanswan541.SurvivalGames.util.Arena;
 import me.thebmanswan541.SurvivalGames.util.Countdown;
 import net.md_5.bungee.api.ChatColor;
@@ -63,8 +64,8 @@ public class ScoreboardManager {
                     }
                 }
             }, 0, 20);
-        } else if (SurvivalGames.arena.isState(Arena.ArenaState.COUNTDOWN)) {
-            Score e = o.getScore(ChatColor.WHITE+"Starting in "+ChatColor.GREEN+ Countdown.getCountdownTime()+"s");
+        } else if (SurvivalGames.arena.isState(Arena.ArenaState.LOBBY_COUNTDOWN)) {
+            Score e = o.getScore(ChatColor.WHITE+"Starting in "+ChatColor.GREEN+ StartingListener.c.getTimeLeft()+"s");
             e.setScore(3);
         }
         Score f = o.getScore("§4");
