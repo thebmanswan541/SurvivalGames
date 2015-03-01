@@ -1,10 +1,13 @@
 package me.thebmanswan541.SurvivalGames.listeners;
 
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
+import me.thebmanswan541.SurvivalGames.managers.ScoreboardManager;
 import me.thebmanswan541.SurvivalGames.util.Arena;
 import me.thebmanswan541.SurvivalGames.util.Countdown;
+import me.thebmanswan541.SurvivalGames.util.FileManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,7 +30,14 @@ public class StartingListener implements Listener{
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         if (SurvivalGames.arena.isState(Arena.ArenaState.WAITING) || SurvivalGames.arena.isState(Arena.ArenaState.COUNTDOWN)) {
-            e.setJoinMessage(SurvivalGames.tag + ChatColor.AQUA + p.getName() + ChatColor.YELLOW + " joined the game " + ChatColor.YELLOW + "(" + ChatColor.LIGHT_PURPLE + Bukkit.getOnlinePlayers().size() + ChatColor.YELLOW + "/" + Bukkit.getMaxPlayers() + ChatColor.LIGHT_PURPLE + ")!");
+            try {
+                p.teleport(SurvivalGames.parseLocation(FileManager.getArenas().<ConfigurationSection>get(SurvivalGames.arena.getID() + ".lobby")));
+            }catch(Exception ex) {
+                ex.printStackTrace();
+                p.sendMessage(SurvivalGames.tag+ChatColor.RED+"Lobby or default arena has not been set up yet!");
+            }
+            ScoreboardManager.refreshStartScoreboard();
+            e.setJoinMessage(SurvivalGames.tag + ChatColor.AQUA + p.getName() + ChatColor.YELLOW + " joined the game " + ChatColor.YELLOW + "(" + ChatColor.LIGHT_PURPLE + Bukkit.getOnlinePlayers().size() + ChatColor.YELLOW + "/" + ChatColor.LIGHT_PURPLE + Bukkit.getMaxPlayers() + ChatColor.YELLOW + ")!");
             SurvivalGames.arena.addPlayer(p);
             if (Bukkit.getOnlinePlayers().size() == 8) {
                 for (Player pl : Bukkit.getOnlinePlayers()) {
@@ -47,6 +57,7 @@ public class StartingListener implements Listener{
     public void onLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         if (SurvivalGames.arena.isState(Arena.ArenaState.WAITING) || SurvivalGames.arena.isState(Arena.ArenaState.COUNTDOWN)) {
+            ScoreboardManager.refreshStartScoreboard();
             e.setQuitMessage(null);
             SurvivalGames.arena.removePlayer(p);
             if (Bukkit.getOnlinePlayers().size() < 8) {

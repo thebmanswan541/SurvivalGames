@@ -33,6 +33,10 @@ public class FileManager {
     FileConfiguration config;
 
     private FileManager(String path) {
+        if (!SurvivalGames.getPlugin().getDataFolder().exists()) {
+            SurvivalGames.getPlugin().getDataFolder().mkdir();
+        }
+
         f = new File(SurvivalGames.getPlugin().getDataFolder(), path+".yml");
 
         if (!f.exists()) {
@@ -71,7 +75,7 @@ public class FileManager {
         return config.contains(path);
     }
 
-    private void save() {
+    public void save() {
         try {
             config.save(f);
         } catch(Exception e) {

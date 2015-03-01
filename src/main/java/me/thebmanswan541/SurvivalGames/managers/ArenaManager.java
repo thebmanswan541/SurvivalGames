@@ -60,17 +60,11 @@ public class ArenaManager {
         return arenas;
     }
 
-    public Arena[] getArenasArray() {
-        return (Arena[]) getArenas().toArray();
-    }
-
     public Arena getActiveArena() {
         Arena a = null;
         Random r = new Random();
-        int index = r.nextInt(getArenas().size())+1;
-        for (int i = 0; i < index; i++) {
-            a = getArenasArray()[index];
-        }
+        int index = r.nextInt(getArenas().size());
+        a = getArenas().get(index);
         return a;
     }
 

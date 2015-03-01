@@ -1,5 +1,7 @@
 package me.thebmanswan541.SurvivalGames;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import me.thebmanswan541.SurvivalGames.command.CommandManager;
 import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
 import me.thebmanswan541.SurvivalGames.managers.ArenaManager;
 import me.thebmanswan541.SurvivalGames.util.Arena;
@@ -31,12 +33,22 @@ public class SurvivalGames extends JavaPlugin {
     public void onEnable() {
         ArenaManager.getInstance().setup();
         arena = ArenaManager.getInstance().getActiveArena();
+        getCommand("sg").setExecutor(new CommandManager());
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new StartingListener(), this);
     }
 
     public static Plugin getPlugin() {
         return Bukkit.getPluginManager().getPlugin("SurvivalGames");
+    }
+
+    public static void saveLocation(Location location, ConfigurationSection section) {
+        section.set("world", location.getWorld().getName());
+        section.set("x", location.getX());
+        section.set("y", location.getY());
+        section.set("z", location.getZ());
+        section.set("pitch", location.getPitch());
+        section.set("yaw", location.getYaw());
     }
 
     public static Location parseLocation(ConfigurationSection location) {
@@ -46,7 +58,7 @@ public class SurvivalGames extends JavaPlugin {
         double z = location.getDouble("z");
         float pitch = (float) location.getDouble("pitch");
         float yaw = (float) location.getDouble("yaw");
-        return new Location(world, x, y, z, pitch, yaw);
+        return new Location(world, x, y, z, yaw, pitch);
     }
 
     public static void startCountdown() {
@@ -55,5 +67,9 @@ public class SurvivalGames extends JavaPlugin {
 
     public static void stopCountdown() {
         Bukkit.getScheduler().cancelTask(countdownID);
+    }
+
+    public static WorldEditPlugin getWorldEdit() {
+        return (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
     }
 }

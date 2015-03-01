@@ -1,6 +1,7 @@
 package me.thebmanswan541.SurvivalGames.util;
 
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
+import me.thebmanswan541.SurvivalGames.managers.ScoreboardManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,6 +30,7 @@ public class Countdown implements Runnable{
     @Override
     public void run() {
         if (getCountdownTime() == 0) {
+            ScoreboardManager.cancelWaiting();
           // TODO: start the game
         } else if (getCountdownTime() == 30)  {
             for (Player p : Bukkit.getOnlinePlayers()) {

@@ -1,4 +1,4 @@
-package me.thebmanswan541.SurvivalGames.commands;
+package me.thebmanswan541.SurvivalGames.command;
 
 import org.bukkit.entity.Player;
 
@@ -11,9 +11,9 @@ import org.bukkit.entity.Player;
  * Claiming this project to be created by you is strictly prohibited.
  * **********************************************************
  */
-public abstract class SubCommand {
+public interface SubCommand {
 
-    public abstract void onCommand(Player player, String[] args);
+    public boolean onCommand(Player player, String[] args);
 
-
+    public String help(Player p);
 }

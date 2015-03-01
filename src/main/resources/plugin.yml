@@ -1,4 +1,9 @@
 name: ${project.artifactId}
-main: main.java.me.thebmanswan541.SurvivalGames.SurvivalGames
+main: me.thebmanswan541.SurvivalGames.SurvivalGames
 version: ${project.version}
 author: [TheBmanSwan]
+depend: [WorldEdit]
+commands:
+    sg:
+      description: Default SurvivalGames command.
+      usage: /<command>
