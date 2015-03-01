@@ -4,6 +4,7 @@ import me.thebmanswan541.SurvivalGames.SurvivalGames;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,7 @@ import java.util.List;
  * Copyright TheBmanSwan (c) 2015. All Rights Reserved.
  * Upon using the for commercial use, the user must give
  * credit to TheBmanSwan. Distribution of the code is allowed
- * Claiming this project to be created by you is strictly
- * prohibited. Thanks.
+ * Claiming this project to be created by you is strictly prohibited.
  * **********************************************************
  */
 public class Arena {
@@ -44,7 +44,7 @@ public class Arena {
     /**
      * @param id Name of arena.
      */
-    protected Arena(String id) {
+    public Arena(String id) {
         this.id = id;
         this.state = ArenaState.WAITING;
         this.players = new ArrayList<Player>();

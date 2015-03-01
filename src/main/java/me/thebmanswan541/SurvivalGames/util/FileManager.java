@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.util.Set;
 
 /**
  * **********************************************************
@@ -13,8 +14,7 @@ import java.io.File;
  * Copyright TheBmanSwan (c) 2015. All Rights Reserved.
  * Upon using the for commercial use, the user must give
  * credit to TheBmanSwan. Distribution of the code is allowed
- * Claiming this project to be created by you is strictly
- * prohibited. Thanks.
+ * Claiming this project to be created by you is strictly prohibited.
  * **********************************************************
  */
 public class FileManager {
@@ -51,6 +51,10 @@ public class FileManager {
         return (T) config.get(path);
     }
 
+    public Set<String> getKeys() {
+        return config.getKeys(false);
+    }
+
     public void set(String path, Object value) {
         config.set(path, value);
         save();
@@ -60,6 +64,8 @@ public class FileManager {
         save();
         return cs;
     }
+
+
 
     public boolean contains(String path) {
         return config.contains(path);
