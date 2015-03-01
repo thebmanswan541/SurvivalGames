@@ -72,16 +72,6 @@ public class Arena {
      * @param player Adds player to the game.
      */
     public void addPlayer(Player player) {
-        if (isState(ArenaState.STARTING) || isState(ArenaState.IN_GAME)) {
-            player.sendMessage(SurvivalGames.tag + ChatColor.RED + "The game has already started!");
-        } else if (isState(ArenaState.RESTARTING)) {
-            player.sendMessage(SurvivalGames.tag+ChatColor.RED+"This server is currently restarting.");
-        } else if (players.size() +1 > spawns.size()) {
-            player.sendMessage(SurvivalGames.tag+ChatColor.RED+"This game is currently full.");
-        }
-
-        // TODO: add more filters
-
         players.add(player);
     }
 
