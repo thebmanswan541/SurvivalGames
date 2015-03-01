@@ -40,14 +40,18 @@ public class StartingListener implements Listener{
             e.setJoinMessage(SurvivalGames.tag + ChatColor.AQUA + p.getName() + ChatColor.YELLOW + " joined the game " + ChatColor.YELLOW + "(" + ChatColor.LIGHT_PURPLE + Bukkit.getOnlinePlayers().size() + ChatColor.YELLOW + "/" + ChatColor.LIGHT_PURPLE + Bukkit.getMaxPlayers() + ChatColor.YELLOW + ")!");
             SurvivalGames.arena.addPlayer(p);
             if (Bukkit.getOnlinePlayers().size() == 8) {
+                SurvivalGames.arena.setState(Arena.ArenaState.COUNTDOWN);
+                ScoreboardManager.cancelWaiting();
                 for (Player pl : Bukkit.getOnlinePlayers()) {
                     pl.sendMessage(SurvivalGames.tag + ChatColor.YELLOW + "The game is starting in " + ChatColor.LIGHT_PURPLE + "60" + ChatColor.YELLOW + " seconds!");
                 }
                 SurvivalGames.startCountdown();
+                ScoreboardManager.refreshStartScoreboard();
             } else if (Bukkit.getOnlinePlayers().size() == 12 && Countdown.getCountdownTime() > 30) {
                 for (Player pl : Bukkit.getOnlinePlayers()) {
                     pl.sendMessage(SurvivalGames.tag + ChatColor.YELLOW + "The game is starting in " + ChatColor.LIGHT_PURPLE + "30" + ChatColor.YELLOW + " seconds!");
                     Countdown.setCountdownTime(30);
+                    ScoreboardManager.refreshStartScoreboard();
                 }
             }
         }
@@ -61,6 +65,8 @@ public class StartingListener implements Listener{
             e.setQuitMessage(null);
             SurvivalGames.arena.removePlayer(p);
             if (Bukkit.getOnlinePlayers().size() < 8) {
+                SurvivalGames.arena.setState(Arena.ArenaState.WAITING);
+                ScoreboardManager.refreshStartScoreboard();
                 SurvivalGames.stopCountdown();
                 Countdown.setCountdownTime(60);
             }
