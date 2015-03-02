@@ -33,6 +33,9 @@ public class ArcherKit extends Kit{
             kitIcon.setItemMeta(meta);
         }
         this.items = new ArrayList<ItemStack>();
+        this.items.add(new ItemStack(Material.BOW));
+        this.items.add(new ItemStack(Material.ARROW, 16));
+        this.items.add(new ItemStack(Material.COOKED_BEEF, 2));
     }
 
 

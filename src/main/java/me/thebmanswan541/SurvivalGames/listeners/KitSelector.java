@@ -57,6 +57,31 @@ public class KitSelector implements Listener{
     public void onKitSelect(InventoryClickEvent e) {
         if (e.getInventory().getName().contains("Kit Selector")) {
             e.setCancelled(true);
+            Player p = (Player) e.getWhoClicked();
+            if (e.getCurrentItem().getType() != null) {
+                if (e.getCurrentItem().getType() == Material.BOW) {
+                    if (selectedKit.containsKey(p)) {
+                        selectedKit.remove(p);
+                    }
+                    selectedKit.put(p, KitManager.getInstance().getKit(1));
+                    p.closeInventory();
+                    p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"Selected the "+ChatColor.GREEN+"Archer"+ChatColor.YELLOW+" kit! You will recieve your kit 60 seconds after the game starts!");
+                } else if (e.getCurrentItem().getType() == Material.WOOD_SWORD) {
+                    if (selectedKit.containsKey(p)) {
+                        selectedKit.remove(p);
+                    }
+                    selectedKit.put(p, KitManager.getInstance().getKit(2));
+                    p.closeInventory();
+                    p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"Selected the "+ChatColor.GREEN+"Swordsman"+ChatColor.YELLOW+" kit! You will recieve your kit 60 seconds after the game starts!");
+                } else if (e.getCurrentItem().getType() == Material.GLASS_BOTTLE) {
+                    if (selectedKit.containsKey(p)) {
+                        selectedKit.remove(p);
+                    }
+                    selectedKit.put(p, KitManager.getInstance().getKit(3));
+                    p.closeInventory();
+                    p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"Selected the "+ChatColor.GREEN+"Chemist"+ChatColor.YELLOW+" kit! You will recieve your kit 60 seconds after the game starts!");
+                }
+            }
         }
     }
 

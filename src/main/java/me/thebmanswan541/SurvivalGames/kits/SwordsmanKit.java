@@ -32,6 +32,9 @@ public class SwordsmanKit extends Kit{
             kitIcon.setItemMeta(meta);
         }
         this.items = new ArrayList<ItemStack>();
+        this.items.add(new ItemStack(Material.WOOD_SWORD));
+        this.items.add(new ItemStack(Material.GRILLED_PORK, 3));
+        this.items.add(new ItemStack(Material.LEATHER_CHESTPLATE));
     }
 
     @Override

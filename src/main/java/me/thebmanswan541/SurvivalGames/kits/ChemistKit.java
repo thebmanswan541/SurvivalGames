@@ -32,6 +32,8 @@ public class ChemistKit extends Kit{
             kitIcon.setItemMeta(meta);
         }
         this.items = new ArrayList<ItemStack>();
+        this.items.add(new ItemStack(Material.LEATHER_HELMET));
+        this.items.add(new ItemStack(Material.LEATHER_BOOTS));
     }
 
     @Override
