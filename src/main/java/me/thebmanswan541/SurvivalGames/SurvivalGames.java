@@ -2,6 +2,7 @@ package me.thebmanswan541.SurvivalGames;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import me.thebmanswan541.SurvivalGames.command.CommandManager;
+import me.thebmanswan541.SurvivalGames.listeners.KitSelector;
 import me.thebmanswan541.SurvivalGames.listeners.MoveListener;
 import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
 import me.thebmanswan541.SurvivalGames.managers.ArenaManager;
@@ -19,7 +20,7 @@ import org.bukkit.Location;
  * **********************************************************
  * Project: SurvivalGames
  * Copyright TheBmanSwan (c) 2015. All Rights Reserved.
- * Upon using the for commercial use, the user must give
+ * Upon using this for commercial use, the user must give
  * credit to TheBmanSwan. Distribution of the code is allowed
  * Claiming this project to be created by you is strictly prohibited.
  * **********************************************************
@@ -38,6 +39,7 @@ public class SurvivalGames extends JavaPlugin {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new StartingListener(), this);
         pm.registerEvents(new MoveListener(), this);
+        pm.registerEvents(new KitSelector(), this);
     }
 
     public static Plugin getPlugin() {

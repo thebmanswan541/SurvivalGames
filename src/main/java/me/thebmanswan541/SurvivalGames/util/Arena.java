@@ -15,7 +15,7 @@ import java.util.List;
  * **********************************************************
  * Project: SurvivalGames
  * Copyright TheBmanSwan (c) 2015. All Rights Reserved.
- * Upon using the for commercial use, the user must give
+ * Upon using this for commercial use, the user must give
  * credit to TheBmanSwan. Distribution of the code is allowed
  * Claiming this project to be created by you is strictly prohibited.
  * **********************************************************
@@ -41,7 +41,6 @@ public class Arena {
     private ArenaState state;
     private String id;
     private CuboidSelection bounds;
-    private Location lobby;
     private ArrayList<Player> players;
     private ArrayList<Spawn> spawns;
 
@@ -66,10 +65,6 @@ public class Arena {
 
     public String getID() {
         return id;
-    }
-
-    public Location getLobby() {
-        return lobby;
     }
 
     public CuboidSelection getBounds() {
@@ -110,16 +105,8 @@ public class Arena {
         // TODO: More information below
     }
 
-    public List<Spawn> getSpawns() {
-        return spawns;
-    }
-
     public void addSpawn(Location location) {
         spawns.add(new Spawn(location));
-    }
-
-    public ArenaState getState() {
-        return state;
     }
 
     public void setState(ArenaState state) {

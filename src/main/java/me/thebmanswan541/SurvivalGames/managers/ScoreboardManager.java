@@ -3,7 +3,6 @@ package me.thebmanswan541.SurvivalGames.managers;
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
 import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
 import me.thebmanswan541.SurvivalGames.util.Arena;
-import me.thebmanswan541.SurvivalGames.util.Countdown;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,7 +15,7 @@ import org.bukkit.scoreboard.Scoreboard;
  * **********************************************************
  * Project: SurvivalGames
  * Copyright TheBmanSwan (c) 2015. All Rights Reserved.
- * Upon using the for commercial use, the user must give
+ * Upon using this for commercial use, the user must give
  * credit to TheBmanSwan. Distribution of the code is allowed
  * Claiming this project to be created by you is strictly prohibited.
  * **********************************************************

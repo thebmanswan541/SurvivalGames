@@ -17,28 +17,26 @@ import java.util.List;
  * Claiming this project to be created by you is strictly prohibited.
  * **********************************************************
  */
-public class ArcherKit extends Kit{
-
-    private List<ItemStack> items;
+public class ChemistKit extends Kit{
     private ItemStack kitIcon;
+    private List<ItemStack> items;
 
-    public ArcherKit() {
-        super(1);
-        this.kitIcon = new ItemStack(Material.BOW, 1); {
+    public ChemistKit() {
+        super(3);
+        this.kitIcon = new ItemStack(Material.GLASS_BOTTLE); {
             ItemMeta meta = kitIcon.getItemMeta();
-            meta.setDisplayName(ChatColor.GREEN+"Archer");
+            meta.setDisplayName(ChatColor.GREEN+"Chemist");
             List<String> lore = new ArrayList<String>();
-            lore.add(ChatColor.GRAY+"Used for ranged attacks.");
+            lore.add(ChatColor.GRAY+"Kit of the scientists");
             meta.setLore(lore);
             kitIcon.setItemMeta(meta);
         }
         this.items = new ArrayList<ItemStack>();
     }
 
-
     @Override
     public String getName() {
-        return "Archer";
+        return "Chemist";
     }
 
     @Override
@@ -50,4 +48,5 @@ public class ArcherKit extends Kit{
     public ItemStack getKitIcon() {
         return kitIcon;
     }
+
 }

@@ -17,28 +17,26 @@ import java.util.List;
  * Claiming this project to be created by you is strictly prohibited.
  * **********************************************************
  */
-public class ArcherKit extends Kit{
-
-    private List<ItemStack> items;
+public class SwordsmanKit extends Kit{
     private ItemStack kitIcon;
+    private List<ItemStack> items;
 
-    public ArcherKit() {
-        super(1);
-        this.kitIcon = new ItemStack(Material.BOW, 1); {
+    public SwordsmanKit() {
+        super(2);
+        this.kitIcon = new ItemStack(Material.WOOD_SWORD); {
             ItemMeta meta = kitIcon.getItemMeta();
-            meta.setDisplayName(ChatColor.GREEN+"Archer");
+            meta.setDisplayName(ChatColor.GREEN+"Swordsman");
             List<String> lore = new ArrayList<String>();
-            lore.add(ChatColor.GRAY+"Used for ranged attacks.");
+            lore.add(ChatColor.GRAY+"Close range combat");
             meta.setLore(lore);
             kitIcon.setItemMeta(meta);
         }
         this.items = new ArrayList<ItemStack>();
     }
 
-
     @Override
     public String getName() {
-        return "Archer";
+        return "Swordsman";
     }
 
     @Override
