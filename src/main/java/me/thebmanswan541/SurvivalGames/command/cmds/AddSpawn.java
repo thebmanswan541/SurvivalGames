@@ -38,6 +38,11 @@ public class AddSpawn implements SubCommand{
 
             Arena a = ArenaManager.getInstance().getArena(name);
 
+            if (!a.getBounds().contains(player.getLocation())) {
+                player.sendMessage(SurvivalGames.tag+ChatColor.RED+"You must be inside of the arena's bounds!");
+                return true;
+            }
+
             if (FileManager.getArenas().<ConfigurationSection>get(a.getID()+".spawns") == null) {
                 FileManager.getArenas().createSection(a.getID()+".spawns");
             }

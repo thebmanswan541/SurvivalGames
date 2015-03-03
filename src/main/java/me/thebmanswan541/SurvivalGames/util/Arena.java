@@ -2,6 +2,7 @@ package me.thebmanswan541.SurvivalGames.util;
 
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
+import me.thebmanswan541.SurvivalGames.exceptions.ArenaNotFoundException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -49,16 +50,30 @@ public class Arena {
      */
     public Arena(String id) {
         this.id = id;
+        Location cornerA = null;
+        Location cornerB = null;
+        try {
+            cornerA = SurvivalGames.parseLocation(FileManager.getArenas().<ConfigurationSection>get(id + ".cornerA"));
+            cornerB = SurvivalGames.parseLocation(FileManager.getArenas().<ConfigurationSection>get(id + ".cornerB"));
+        } catch(ArenaNotFoundException e) {
+
+        }
         this.bounds = new CuboidSelection(Bukkit.getWorld(FileManager.getArenas().<String>get(id + ".world")),
-                SurvivalGames.parseLocation(FileManager.getArenas().<ConfigurationSection>get(id + ".cornerA")),
-                SurvivalGames.parseLocation(FileManager.getArenas().<ConfigurationSection>get(id + ".cornerB"))
+                cornerA,
+                cornerB
         );
         this.state = ArenaState.WAITING;
         this.players = new ArrayList<Player>();
         this.spawns = new ArrayList<Spawn>();
         if (FileManager.getArenas().contains(id+".spawns")) {
             for (String spawnId : FileManager.getArenas().<ConfigurationSection>get(id+".spawns").getKeys(false)) {
-                spawns.add(new Spawn(SurvivalGames.parseLocation(FileManager.getArenas().<ConfigurationSection>get(id + ".spawns." + spawnId))));
+                Location spawn = null;
+                try {
+                    spawn = SurvivalGames.parseLocation(FileManager.getArenas().<ConfigurationSection>get(id + ".spawns." + spawnId));
+                }catch(ArenaNotFoundException e) {
+
+                }
+                spawns.add(new Spawn(spawn));
             }
         }
     }
