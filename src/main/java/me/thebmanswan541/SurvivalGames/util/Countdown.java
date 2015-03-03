@@ -3,7 +3,7 @@ package me.thebmanswan541.SurvivalGames.util;
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
 import me.thebmanswan541.SurvivalGames.listeners.KitSelector;
 import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
-import me.thebmanswan541.SurvivalGames.managers.KitManager;
+import me.thebmanswan541.SurvivalGames.managers.ArenaManager;
 import me.thebmanswan541.SurvivalGames.managers.ScoreboardManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -74,11 +74,11 @@ public class Countdown extends BukkitRunnable {
                 for (Player p : SurvivalGames.arena.getPlayers()) {
                     p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You no longer have invulnerability!");
                 }
-                SurvivalGames.arena.setState(Arena.ArenaState.IN_GAME);
+                SurvivalGames.arena.setState(Arena.ArenaState.RECEIVE_KIT);
                 StartingListener.c.cancel();
                 StartingListener.c = new Countdown(SurvivalGames.arena, 40, 5, 4, 3, 2, 1);
                 StartingListener.c.runTaskTimer(SurvivalGames.getPlugin(), 0, 20);
-            } else if (SurvivalGames.arena.isState(Arena.ArenaState.IN_GAME)) {
+            } else if (SurvivalGames.arena.isState(Arena.ArenaState.RECEIVE_KIT)) {
                 for (Player p : SurvivalGames.arena.getPlayers()) {
                     for (ItemStack is : KitSelector.selectedKit.get(p).getItems()) {
                         p.getInventory().addItem(is);
@@ -86,7 +86,15 @@ public class Countdown extends BukkitRunnable {
                     p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You got your "+ChatColor.GREEN+KitSelector.selectedKit.get(p).getName()+" kit!");
                     KitSelector.selectedKit.remove(p);
                 }
+                SurvivalGames.arena.setState(Arena.ArenaState.IN_GAME);
                 StartingListener.c.cancel();
+                StartingListener.c = new Countdown(SurvivalGames.arena, 900, 600, 300, 60, 5, 4, 3, 2, 1);
+                StartingListener.c.runTaskTimer(SurvivalGames.getPlugin(), 0, 20);
+            } else if (SurvivalGames.arena.isState(Arena.ArenaState.IN_GAME)) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"Deathmatch starting. Teleporting all players to the deathmatch arena...");
+                    p.teleport(ArenaManager.getInstance().getDeathmatchLocation());
+                }
             }
             cancel();
             return;
@@ -104,9 +112,21 @@ public class Countdown extends BukkitRunnable {
                 for (Player p : SurvivalGames.arena.getPlayers()) {
                     p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"Invulnerability wears off in "+time+" seconds!");
                 }
-            } else if (SurvivalGames.arena.isState(Arena.ArenaState.IN_GAME)) {
+            } else if (SurvivalGames.arena.isState(Arena.ArenaState.RECEIVE_KIT)) {
                 for (Player p : SurvivalGames.arena.getPlayers()) {
                     p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You will get your kit items in "+time+" seconds!");
+                }
+            } else if (SurvivalGames.arena.isState(Arena.ArenaState.IN_GAME)) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (time % 60 == 0) {
+                        if (time/60 == 1) {
+                            p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"Deathmatch starting in 1 minute!");
+                        } else {
+                            p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"Deathmatch starting in "+time%60+" minutes!");
+                        }
+                    } else {
+                        p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"Deathmatch starting in "+time+" seconds!");
+                    }
                 }
             }
         }

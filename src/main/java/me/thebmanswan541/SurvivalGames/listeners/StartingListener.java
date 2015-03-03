@@ -1,5 +1,6 @@
 package me.thebmanswan541.SurvivalGames.listeners;
 
+import me.thebmanswan541.SurvivalGames.exceptions.ArenaNotFoundException;
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
 import me.thebmanswan541.SurvivalGames.managers.ScoreboardManager;
 import me.thebmanswan541.SurvivalGames.util.Arena;
@@ -37,7 +38,7 @@ public class StartingListener implements Listener{
             if (SurvivalGames.arena.isState(Arena.ArenaState.WAITING) || SurvivalGames.arena.isState(Arena.ArenaState.LOBBY_COUNTDOWN)) {
                 try {
                     p.teleport(SurvivalGames.parseLocation(FileManager.getArenas().<ConfigurationSection>get(SurvivalGames.arena.getID() + ".lobby")));
-                } catch (Exception ex) {
+                } catch (ArenaNotFoundException ex) {
                     p.sendMessage(SurvivalGames.tag + ChatColor.RED + "Lobby has not been set up yet!");
                 }
                 ScoreboardManager.refreshStartScoreboard();

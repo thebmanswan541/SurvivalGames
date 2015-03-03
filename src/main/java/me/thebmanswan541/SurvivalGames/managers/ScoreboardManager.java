@@ -3,6 +3,7 @@ package me.thebmanswan541.SurvivalGames.managers;
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
 import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
 import me.thebmanswan541.SurvivalGames.util.Arena;
+import me.thebmanswan541.SurvivalGames.util.Countdown;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,6 +25,7 @@ public class ScoreboardManager {
 
     private static Scoreboard s;
     private static int waitingID;
+    private Countdown c;
 
     public static void refreshStartScoreboard() {
         s = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -82,6 +84,27 @@ public class ScoreboardManager {
 
     public static void cancelWaiting() {
         Bukkit.getScheduler().cancelTask(waitingID);
+    }
+
+    private static Scoreboard main;
+
+    public static void refreshMainScoreboard() {
+        main = Bukkit.getScoreboardManager().getNewScoreboard();
+        Objective o = main.registerNewObjective("Main board", "dummy");
+        o.setDisplaySlot(DisplaySlot.SIDEBAR);
+        o.setDisplayName(ChatColor.YELLOW+"§lSURVIVAL "+ChatColor.GOLD+"§lGAMES");
+        Score a = o.getScore("§0");
+        Score b = o.getScore("Kills: "+ChatColor.GREEN);
+        Score c = o.getScore("Players left: "+ChatColor.GREEN+SurvivalGames.arena.getPlayers().size());
+        Score d = o.getScore("§1");
+        Score e = o.getScore("Time until death match: "+ChatColor.GREEN);
+        Score f = o.getScore("§2");
+        a.setScore(6);
+        b.setScore(5);
+        c.setScore(4);
+        d.setScore(3);
+        e.setScore(2);
+        f.setScore(1);
     }
 
 

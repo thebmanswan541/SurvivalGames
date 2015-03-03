@@ -23,7 +23,7 @@ import java.util.List;
 public class Arena {
 
     public enum ArenaState {
-        WAITING(ChatColor.WHITE, "Waiting..."), LOBBY_COUNTDOWN(ChatColor.BLUE, "Lobby Countdown"), START_COUNTDOWN(ChatColor.YELLOW, "Start Countdown"), GRACE_PERIOD(ChatColor.AQUA, "Grace Period"), IN_GAME(ChatColor.GOLD, "In-Game"), RESTARTING(ChatColor.RED, "Restarting...");
+        WAITING(ChatColor.WHITE, "Waiting..."), LOBBY_COUNTDOWN(ChatColor.BLUE, "Lobby Countdown"), START_COUNTDOWN(ChatColor.YELLOW, "Start Countdown"), GRACE_PERIOD(ChatColor.AQUA, "Grace Period"), RECEIVE_KIT(ChatColor.GOLD, "Receive kit"), IN_GAME(ChatColor.RED, "In-Game"), DEATHMATCH(ChatColor.RED, "Deathmatch"), RESETTING(ChatColor.WHITE, "Resetting...");
 
         private String name;
         private ChatColor color;

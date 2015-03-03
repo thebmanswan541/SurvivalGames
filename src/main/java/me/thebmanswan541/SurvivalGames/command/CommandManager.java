@@ -1,10 +1,7 @@
 package me.thebmanswan541.SurvivalGames.command;
 
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
-import me.thebmanswan541.SurvivalGames.command.cmds.AddSpawn;
-import me.thebmanswan541.SurvivalGames.command.cmds.CreateArena;
-import me.thebmanswan541.SurvivalGames.command.cmds.DeleteArena;
-import me.thebmanswan541.SurvivalGames.command.cmds.SetLobby;
+import me.thebmanswan541.SurvivalGames.command.cmds.*;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,6 +33,7 @@ public class CommandManager implements CommandExecutor{
         cmds.put("setlobby", new SetLobby());
         cmds.put("addspawn", new AddSpawn());
         cmds.put("deletearena", new DeleteArena());
+        cmds.put("setdeathmatch", new SetDeathmatch());
     }
 
     @Override

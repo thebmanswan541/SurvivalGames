@@ -20,12 +20,14 @@ public class MoveListener implements Listener {
 
     @EventHandler
     public void Move(PlayerMoveEvent e){
-        if (SurvivalGames.arena.isState(Arena.ArenaState.START_COUNTDOWN)) {
-            Location loc = e.getFrom();
-            if (e.getTo().getY() != loc.getY() || e.getTo().getZ() != loc.getZ() || e.getTo().getX() != loc.getX()) {
-                loc.setPitch(e.getTo().getPitch());
-                loc.setYaw(e.getTo().getYaw());
-                e.setTo(loc);
+        if (SurvivalGames.arena != null) {
+            if (SurvivalGames.arena.isState(Arena.ArenaState.START_COUNTDOWN)) {
+                Location loc = e.getFrom();
+                if (e.getTo().getY() != loc.getY() || e.getTo().getZ() != loc.getZ() || e.getTo().getX() != loc.getX()) {
+                    loc.setPitch(e.getTo().getPitch());
+                    loc.setYaw(e.getTo().getYaw());
+                    e.setTo(loc);
+                }
             }
         }
     }

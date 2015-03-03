@@ -2,6 +2,7 @@ package me.thebmanswan541.SurvivalGames;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import me.thebmanswan541.SurvivalGames.command.CommandManager;
+import me.thebmanswan541.SurvivalGames.exceptions.ArenaNotFoundException;
 import me.thebmanswan541.SurvivalGames.listeners.KitSelector;
 import me.thebmanswan541.SurvivalGames.listeners.MoveListener;
 import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
@@ -55,7 +56,7 @@ public class SurvivalGames extends JavaPlugin {
         section.set("yaw", location.getYaw());
     }
 
-    public static Location parseLocation(ConfigurationSection location) {
+    public static Location parseLocation(ConfigurationSection location) throws ArenaNotFoundException {
         World world = Bukkit.getWorld(location.getString("world"));
         double x = location.getDouble("x");
         double y = location.getDouble("y");

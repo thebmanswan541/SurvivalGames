@@ -1,7 +1,10 @@
 package me.thebmanswan541.SurvivalGames.managers;
 
+import me.thebmanswan541.SurvivalGames.SurvivalGames;
 import me.thebmanswan541.SurvivalGames.util.Arena;
 import me.thebmanswan541.SurvivalGames.util.FileManager;
+import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import java.util.Random;
 public class ArenaManager {
 
     private ArrayList<Arena> arenas;
+    private Location deathmatchLocation;
 
     private ArenaManager(){
         this.arenas = new ArrayList<Arena>();
@@ -63,8 +67,18 @@ public class ArenaManager {
     public Arena getActiveArena() {
         Random r = new Random();
         int index = r.nextInt(getArenas().size());
-        Arena a = getArenas().get(index);
-        return a;
+        return getArenas().get(index);
     }
 
+    public void setDeathmatchLocation(Location location) {
+        if (FileManager.getConfig().<ConfigurationSection>get("deathmatch-location") != null) {
+            FileManager.getConfig().set("deathmatch-location", null);
+        }
+        this.deathmatchLocation = location;
+        SurvivalGames.saveLocation(location, FileManager.getConfig().createSection("deathmatch-location"));
+    }
+
+    public Location getDeathmatchLocation() {
+        return deathmatchLocation;
+    }
 }
