@@ -58,6 +58,6 @@ public class CreateArena implements SubCommand{
 
     @Override
     public String help(Player p) {
-        return "§l- "+ChatColor.RESET+ChatColor.RED+"/sg createarena <arenaname> "+ChatColor.GREEN+"- "+ChatColor.RED+"Creates an arena with a WorldEdit selection";
+        return "§l- "+ChatColor.RESET+ChatColor.YELLOW+"/sg createarena <arenaname> "+ChatColor.GRAY+"- "+ChatColor.YELLOW+"Creates an arena with a WorldEdit selection";
     }
 }

@@ -38,7 +38,6 @@ public class CommandManager implements CommandExecutor{
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED+"Only players can use the SurvivalGames commands!");
         }

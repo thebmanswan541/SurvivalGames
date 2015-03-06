@@ -3,7 +3,7 @@ package me.thebmanswan541.SurvivalGames;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import me.thebmanswan541.SurvivalGames.command.CommandManager;
 import me.thebmanswan541.SurvivalGames.exceptions.ArenaNotFoundException;
-import me.thebmanswan541.SurvivalGames.listeners.KillandDeathListener;
+import me.thebmanswan541.SurvivalGames.listeners.KillListener;
 import me.thebmanswan541.SurvivalGames.listeners.KitSelector;
 import me.thebmanswan541.SurvivalGames.listeners.MoveListener;
 import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
@@ -39,10 +39,11 @@ public class SurvivalGames extends JavaPlugin {
         }
         getCommand("sg").setExecutor(new CommandManager());
         PluginManager pm = Bukkit.getPluginManager();
+        pm.addPermission(CommandManager.sgCommand);
         pm.registerEvents(new StartingListener(), this);
         pm.registerEvents(new MoveListener(), this);
         pm.registerEvents(new KitSelector(), this);
-        pm.registerEvents(new KillandDeathListener(), this);
+        pm.registerEvents(new KillListener(), this);
     }
 
     public static Plugin getPlugin() {

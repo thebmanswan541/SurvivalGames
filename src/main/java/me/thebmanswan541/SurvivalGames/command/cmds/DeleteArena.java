@@ -45,6 +45,6 @@ public class DeleteArena implements SubCommand{
 
     @Override
     public String help(Player p) {
-        return "§l- "+ ChatColor.RESET+ChatColor.RED+"/sg deletearena <arenaname>"+ChatColor.GRAY+" - "+ChatColor.RED+"Removes an arena from the system";
+        return "§l- "+ ChatColor.RESET+ChatColor.YELLOW+"/sg deletearena <arenaname>"+ChatColor.GRAY+" - "+ChatColor.YELLOW+"Removes an arena from the system";
     }
 }

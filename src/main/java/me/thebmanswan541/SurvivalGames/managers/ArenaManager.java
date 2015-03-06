@@ -22,7 +22,6 @@ import java.util.Random;
 public class ArenaManager {
 
     private ArrayList<Arena> arenas;
-    private Location deathmatchLocation;
 
     private ArenaManager(){
         this.arenas = new ArrayList<Arena>();
@@ -51,15 +50,6 @@ public class ArenaManager {
         return null;
     }
 
-    public Arena getArena(Player player) {
-        for (Arena arena : arenas) {
-            if (arena.containsPlayer(player)) {
-                return arena;
-            }
-        }
-        return null;
-    }
-
     public ArrayList<Arena> getArenas() {
         return arenas;
     }
@@ -68,17 +58,5 @@ public class ArenaManager {
         Random r = new Random();
         int index = r.nextInt(getArenas().size());
         return getArenas().get(index);
-    }
-
-    public void setDeathmatchLocation(Location location) {
-        if (FileManager.getConfig().<ConfigurationSection>get("deathmatch-location") != null) {
-            FileManager.getConfig().set("deathmatch-location", null);
-        }
-        this.deathmatchLocation = location;
-        SurvivalGames.saveLocation(location, FileManager.getConfig().createSection("deathmatch-location"));
-    }
-
-    public Location getDeathmatchLocation() {
-        return deathmatchLocation;
     }
 }

@@ -51,6 +51,6 @@ public class SetLobby implements SubCommand{
 
     @Override
     public String help(Player p) {
-        return "§l- "+ChatColor.RESET+ChatColor.RED+"/sg setlobby <arenaname>"+ChatColor.GRAY+" - "+ChatColor.RED+"Sets the lobby of a specified arena";
+        return "§l- "+ChatColor.RESET+ChatColor.YELLOW+"/sg setlobby <arenaname>"+ChatColor.GRAY+" - "+ChatColor.YELLOW+"Sets the lobby of a specified arena";
     }
 }

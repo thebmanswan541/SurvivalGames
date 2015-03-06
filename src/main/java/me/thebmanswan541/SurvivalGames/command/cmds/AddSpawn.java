@@ -4,6 +4,7 @@ import me.thebmanswan541.SurvivalGames.SurvivalGames;
 import me.thebmanswan541.SurvivalGames.command.SubCommand;
 import me.thebmanswan541.SurvivalGames.managers.ArenaManager;
 import me.thebmanswan541.SurvivalGames.util.Arena;
+import me.thebmanswan541.SurvivalGames.util.Deathmatch;
 import me.thebmanswan541.SurvivalGames.util.FileManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -31,6 +32,24 @@ public class AddSpawn implements SubCommand{
                x.append(args[i] + " ");
             }
             String name = x.toString().trim();
+
+            if (name.toLowerCase().equals("deathmatch") || name.toUpperCase().equals("DEATHMATCH")) {
+                if (!Deathmatch.getInstance().getBounds().contains(player.getLocation())) {
+                    player.sendMessage(SurvivalGames.tag+ChatColor.RED+"You must be inside of the deathmatch arena's bounds!");
+                    return true;
+                }
+
+                if (FileManager.getConfig().<ConfigurationSection>get("deathmatch.spawns") == null) {
+                    FileManager.getConfig().createSection("deathmatch.spawns");
+                }
+
+                Deathmatch.getInstance().addSpawn(player.getLocation());
+                SurvivalGames.saveLocation(player.getLocation(), FileManager.getConfig().createSection("deathmatch.spawns."+FileManager.getConfig().<ConfigurationSection>get("deathmatch.spawns").getKeys(false).size()));
+                FileManager.getConfig().save();
+                player.sendMessage(SurvivalGames.tag + ChatColor.GREEN + "Added a new spawn to the deathmatch arena!");
+                return true;
+            }
+
             if (ArenaManager.getInstance().getArena(name) == null) {
                 player.sendMessage(SurvivalGames.tag + ChatColor.RED + "The specified arena does not exist!");
                 return true;
@@ -39,7 +58,7 @@ public class AddSpawn implements SubCommand{
             Arena a = ArenaManager.getInstance().getArena(name);
 
             if (!a.getBounds().contains(player.getLocation())) {
-                player.sendMessage(SurvivalGames.tag+ChatColor.RED+"You must be inside of the arena's bounds!");
+                player.sendMessage(SurvivalGames.tag+ChatColor.RED+"You must be inside of "+a.getID()+"'s bounds!");
                 return true;
             }
 
@@ -57,6 +76,6 @@ public class AddSpawn implements SubCommand{
 
     @Override
     public String help(Player p) {
-        return "§l- "+ChatColor.RESET+ChatColor.RED+"/sg addspawn <arenaname>"+ChatColor.GRAY+" - "+ChatColor.RED+"Adds a spawn point to the specified arena";
+        return "§l- "+ChatColor.RESET+ChatColor.YELLOW+"/sg addspawn <arenaname>"+ChatColor.GRAY+" - "+ChatColor.YELLOW+"Adds a spawn point to the specified arena";
     }
 }

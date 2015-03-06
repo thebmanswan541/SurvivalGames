@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -28,10 +27,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class StartingListener implements Listener{
 
     public static Countdown c;
+    public static Countdown d;
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        p.getInventory().clear();
         if (SurvivalGames.arena == null) {
             p.sendMessage(SurvivalGames.tag+ChatColor.RED+"§lPlease create a default arena!");
         } else {
@@ -41,31 +42,31 @@ public class StartingListener implements Listener{
                 } catch (ArenaNotFoundException ex) {
                     p.sendMessage(SurvivalGames.tag + ChatColor.RED + "Lobby has not been set up yet!");
                 }
-                ScoreboardManager.refreshStartScoreboard();
-                e.setJoinMessage(SurvivalGames.tag + ChatColor.AQUA + p.getName() + ChatColor.YELLOW + " joined the game " + ChatColor.YELLOW + "(" + ChatColor.LIGHT_PURPLE + Bukkit.getOnlinePlayers().size() + ChatColor.YELLOW + "/" + ChatColor.LIGHT_PURPLE + Bukkit.getMaxPlayers() + ChatColor.YELLOW + ")!");
+
+                ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size());
+                e.setJoinMessage(SurvivalGames.tag + ChatColor.GRAY + p.getName() + ChatColor.YELLOW + " joined the game " + ChatColor.YELLOW + "(" + ChatColor.LIGHT_PURPLE + Bukkit.getOnlinePlayers().size() + ChatColor.YELLOW + "/" + ChatColor.LIGHT_PURPLE + Bukkit.getMaxPlayers() + ChatColor.YELLOW + ")!");
                 if (Bukkit.getOnlinePlayers().size() == 1) {
                     SurvivalGames.arena.setState(Arena.ArenaState.LOBBY_COUNTDOWN);
                     ScoreboardManager.cancelWaiting();
+                    ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size());
                     c = new Countdown(SurvivalGames.arena, 60, 60, 30, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
                     c.runTaskTimer(SurvivalGames.getPlugin(), 0, 20);
-                    ScoreboardManager.refreshStartScoreboard();
                 } else if (Bukkit.getOnlinePlayers().size() == 12 && c.getTimeLeft() > 30) {
                     c.setCountdownTime(30);
-                    ScoreboardManager.refreshStartScoreboard();
+                    ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size());
                 }
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler
     public void onLeave(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
         if (SurvivalGames.arena.isState(Arena.ArenaState.WAITING) || SurvivalGames.arena.isState(Arena.ArenaState.LOBBY_COUNTDOWN)) {
-            ScoreboardManager.refreshStartScoreboard();
+            ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size()-1);
             e.setQuitMessage(null);
-            if (Bukkit.getOnlinePlayers().size() < 8 && c.getTimeLeft() < 60) {
+            if (Bukkit.getOnlinePlayers().size()-1 < 2 && c.getTimeLeft() < 60) {
                 SurvivalGames.arena.setState(Arena.ArenaState.WAITING);
-                ScoreboardManager.refreshStartScoreboard();
+                ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size() - 1);
                 c.stopCountdown();
             }
         }

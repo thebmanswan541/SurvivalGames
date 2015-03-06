@@ -1,9 +1,9 @@
 package me.thebmanswan541.SurvivalGames.managers;
 
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
+import me.thebmanswan541.SurvivalGames.listeners.KillListener;
 import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
 import me.thebmanswan541.SurvivalGames.util.Arena;
-import me.thebmanswan541.SurvivalGames.util.Countdown;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,18 +25,22 @@ public class ScoreboardManager {
 
     private static Scoreboard s;
     private static int waitingID;
-    private Countdown c;
 
-    public static void refreshStartScoreboard() {
+    public static void refreshStartScoreboard(int numPlayers) {
         s = Bukkit.getScoreboardManager().getNewScoreboard();
         final Objective o = s.registerNewObjective("Start", "dummy");
         o.setDisplayName(ChatColor.YELLOW+"§lSURVIVAL "+ChatColor.GOLD+"§lGAMES");
         o.setDisplaySlot(DisplaySlot.SIDEBAR);
         Score a = o.getScore("§1");
         Score b = o.getScore(ChatColor.WHITE+"Map: "+ChatColor.GREEN+ SurvivalGames.arena.getID());
-        Score c = o.getScore(ChatColor.WHITE+"Players: "+ChatColor.GREEN+Bukkit.getOnlinePlayers().size()+"/"+Bukkit.getMaxPlayers());
+        Score c = o.getScore(ChatColor.WHITE+"Players: "+ChatColor.GREEN+numPlayers+"/"+Bukkit.getMaxPlayers());
         Score d = o.getScore("§2");
-        if (SurvivalGames.arena.isState(Arena.ArenaState.WAITING)) {
+        if (SurvivalGames.arena.isState(Arena.ArenaState.LOBBY_COUNTDOWN)) {
+            if (o.getScore("Starting in "+ChatColor.GREEN+"60s") == null) {
+                Score e = o.getScore(ChatColor.WHITE + "Starting in " + ChatColor.GREEN + "60s");
+                e.setScore(3);
+            }
+        } else if (SurvivalGames.arena.isState(Arena.ArenaState.WAITING)) {
             waitingID = Bukkit.getScheduler().scheduleSyncRepeatingTask(SurvivalGames.getPlugin(), new Runnable() {
                 int index = 0;
                 Score e;
@@ -65,9 +69,6 @@ public class ScoreboardManager {
                     }
                 }
             }, 0, 20);
-        } else if (SurvivalGames.arena.isState(Arena.ArenaState.LOBBY_COUNTDOWN)) {
-            Score e = o.getScore(ChatColor.WHITE+"Starting in "+ChatColor.GREEN+ StartingListener.c.getTimeLeft()+"s");
-            e.setScore(3);
         }
         Score f = o.getScore("§4");
         Score g = o.getScore("www.sgtest.org");
@@ -86,27 +87,51 @@ public class ScoreboardManager {
         Bukkit.getScheduler().cancelTask(waitingID);
     }
 
+    public static Scoreboard getStartBoard() {
+        return s;
+    }
+
     private static Scoreboard main;
 
-    public static void refreshMainScoreboard() {
+    public static void refreshMainScoreboard(Player p) {
         main = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective o = main.registerNewObjective("Main board", "dummy");
         o.setDisplaySlot(DisplaySlot.SIDEBAR);
         o.setDisplayName(ChatColor.YELLOW+"§lSURVIVAL "+ChatColor.GOLD+"§lGAMES");
         Score a = o.getScore("§0");
-        Score b = o.getScore("Kills: "+ChatColor.GREEN);
+        Score b = o.getScore("Kills: "+ChatColor.GREEN+ KillListener.getKills(p));
         Score c = o.getScore("Players left: "+ChatColor.GREEN+SurvivalGames.arena.getPlayers().size());
         Score d = o.getScore("§1");
-        Score e = o.getScore("Time until death match: "+ChatColor.GREEN);
-        Score f = o.getScore("§2");
-        a.setScore(6);
-        b.setScore(5);
-        c.setScore(4);
-        d.setScore(3);
-        e.setScore(2);
-        f.setScore(1);
+        Score e = o.getScore("Time until");
+        Score f;
+        if (StartingListener.d.getTimeLeft().equals(1)) {
+            f = o.getScore("deathmatch: "+ChatColor.RED+"N/A");
+        } else {
+            f = o.getScore("deathmatch: " + ChatColor.GREEN + "15:00");
+        }
+        Score g = o.getScore("§2");
+        a.setScore(7);
+        b.setScore(6);
+        c.setScore(5);
+        d.setScore(4);
+        e.setScore(3);
+        f.setScore(2);
+        g.setScore(1);
+        p.setScoreboard(main);
     }
 
+    public static Scoreboard getMainBoard() {
+        return main;
+    }
 
+    public static String getNumberToTimeFormat(int time) {
+        int minute = time/60;
+        int timeToTenth = minute*60;
+        int second = time-timeToTenth;
+        if (second < 10) {
+            return minute+":0"+second;
+        }
+        return minute+":"+second;
+    }
 
 }

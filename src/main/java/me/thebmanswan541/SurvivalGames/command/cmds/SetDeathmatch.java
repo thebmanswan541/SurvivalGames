@@ -1,9 +1,11 @@
 package me.thebmanswan541.SurvivalGames.command.cmds;
 
+import com.sk89q.worldedit.bukkit.selections.Selection;
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
 import me.thebmanswan541.SurvivalGames.command.SubCommand;
-import me.thebmanswan541.SurvivalGames.managers.ArenaManager;
+import me.thebmanswan541.SurvivalGames.util.FileManager;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 /**
@@ -20,14 +22,23 @@ public class SetDeathmatch implements SubCommand {
     @Override
     public boolean onCommand(Player player, String[] args) {
         if (args.length == 0) {
-            ArenaManager.getInstance().setDeathmatchLocation(player.getLocation());
-            player.sendMessage(SurvivalGames.tag+ ChatColor.GREEN+"Successfully set the deathmatch location!");
+            Selection sel = SurvivalGames.getWorldEdit().getSelection(player);
+            if (sel == null) {
+                player.sendMessage(ChatColor.RED+"Please make a WorldEdit selection of the deathmatch arena.");
+                return true;
+            }
+
+            FileManager.getConfig().set("deathmatch.world", sel.getWorld().getName());
+            SurvivalGames.saveLocation(sel.getMinimumPoint(), FileManager.getConfig().<ConfigurationSection>get("deathmatch.cornerA"));
+            SurvivalGames.saveLocation(sel.getMaximumPoint(), FileManager.getConfig().<ConfigurationSection>get("deathmatch.cornerB"));
+            FileManager.getConfig().save();
+            player.sendMessage(SurvivalGames.tag+ ChatColor.GREEN+"Successfully created the deathmatch arena! Now you must set up the spawns!");
         }
         return true;
     }
 
     @Override
     public String help(Player p) {
-        return "§l- "+ChatColor.RESET+ChatColor.YELLOW+"/sg setdeathmatch"+ChatColor.GRAY+" - "+ChatColor.YELLOW+"Sets the death match location for the server";
+        return "§l- "+ChatColor.RESET+ChatColor.YELLOW+"/sg setdeathmatch"+ChatColor.GRAY+" - "+ChatColor.YELLOW+"Creates the deathmatch arena with a WorldEdit selection";
     }
 }
