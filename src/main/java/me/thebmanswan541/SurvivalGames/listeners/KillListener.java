@@ -1,8 +1,13 @@
 package me.thebmanswan541.SurvivalGames.listeners;
 
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
+import me.thebmanswan541.SurvivalGames.util.Arena;
+import me.thebmanswan541.SurvivalGames.util.Deathmatch;
+import me.thebmanswan541.SurvivalGames.util.SpectatorList;
 import net.md_5.bungee.api.ChatColor;
+import net.minecraft.server.v1_8_R1.PacketPlayOutRespawn;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,21 +32,24 @@ public class KillListener implements Listener{
 
     @EventHandler
     public void onKill(PlayerDeathEvent e) {
-        Player p = e.getEntity();
+        final Player p = e.getEntity();
+        p.getWorld().strikeLightningEffect(p.getLocation());
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SurvivalGames.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+              SurvivalGames.spectators.addPlayer(p);
+            }
+        }, 20L);
         int playersLeft = SurvivalGames.arena.getPlayers().size();
         SurvivalGames.arena.removePlayer(p);
-        if (SurvivalGames.arena.getPlayers().size() == 2) {
-            SurvivalGames.arena.removePlayer(p.getKiller());
-            for (Player pl : SurvivalGames.arena.getPlayers()) {
-                if (pl.equals(p.getKiller())) {
-                    p.kickPlayer(ChatColor.GREEN+"You won Survival Games, congrats!"+ChatColor.WHITE+"You had "+ChatColor.GREEN+getKills(p.getKiller())+" kills!");
-                } else {
-                    p.kickPlayer(ChatColor.RED + "You died! Thanks for playing!" + ChatColor.WHITE + "You came in "+ChatColor.GREEN+"2nd "+ChatColor.WHITE+"place!");
-                }
+        if (SurvivalGames.arena.getPlayers().size() == 1) {
+            if (SurvivalGames.arena.isState(Arena.ArenaState.DEATHMATCH)) {
+                Deathmatch.getInstance().removePlayer(p);
             }
+            SurvivalGames.arena.removePlayer(p.getKiller());
+            //TODO: Send players to lobby server
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
         } else {
-            p.kickPlayer(ChatColor.RED + "You died! Thanks for playing!" + ChatColor.WHITE + "There were " + ChatColor.GREEN + SurvivalGames.arena.getPlayers().size() + ChatColor.GREEN + " left in the game!");
             p.getKiller().getScoreboard().resetScores("Kills: "+ChatColor.GREEN+ getKills(p.getKiller()));
             p.getKiller().getScoreboard().resetScores("Players left: "+ChatColor.GREEN+playersLeft);
             kills.put(p.getKiller(), getKills(p.getKiller()) + 1);

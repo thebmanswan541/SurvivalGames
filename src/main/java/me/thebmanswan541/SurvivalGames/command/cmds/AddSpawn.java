@@ -34,8 +34,13 @@ public class AddSpawn implements SubCommand{
             String name = x.toString().trim();
 
             if (name.toLowerCase().equals("deathmatch") || name.toUpperCase().equals("DEATHMATCH")) {
+                if (FileManager.getConfig().<ConfigurationSection>get("deathmatch") == null) {
+                    player.sendMessage(SurvivalGames.tag+ChatColor.RED+"The deathmatch arena has not been set up yet!");
+                    return true;
+                }
+
                 if (!Deathmatch.getInstance().getBounds().contains(player.getLocation())) {
-                    player.sendMessage(SurvivalGames.tag+ChatColor.RED+"You must be inside of the deathmatch arena's bounds!");
+                    player.sendMessage(SurvivalGames.tag + ChatColor.RED + "You must be inside of the deathmatch arena's bounds!");
                     return true;
                 }
 

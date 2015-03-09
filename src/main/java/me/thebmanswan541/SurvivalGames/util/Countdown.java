@@ -115,6 +115,7 @@ public class Countdown extends BukkitRunnable {
             } else if (SurvivalGames.arena.isState(Arena.ArenaState.IN_GAME)) {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"Deathmatch starting! Teleporting all players to the deathmatch arena...");
+                    SurvivalGames.arena.removePlayer(p);
                     Deathmatch.getInstance().addPlayer(p);
                 }
                 SurvivalGames.arena.setState(Arena.ArenaState.DEATHMATCH);
@@ -171,25 +172,22 @@ public class Countdown extends BukkitRunnable {
     }
 
     private void refreshTimeOnStartBoard(int time) {
-        int resetTime = time + 1;
-        ScoreboardManager.getStartBoard().resetScores("Starting in " + ChatColor.GREEN + resetTime + "s");
-        Score e = ScoreboardManager.getStartBoard().getObjective(DisplaySlot.SIDEBAR).getScore("Starting in " + ChatColor.GREEN + time + "s");
-        e.setScore(3);
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            int resetTime = time + 1;
+            p.getScoreboard().resetScores("Starting in " + ChatColor.GREEN + resetTime + "s");
+            Score e = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore("Starting in " + ChatColor.GREEN + time + "s");
+            e.setScore(3);
+        }
     }
 
     private void refreshTimeOnMainBoard(int time) {
-        int resetTime = time+1;
-        String numtime = ScoreboardManager.getNumberToTimeFormat(resetTime);
-        ScoreboardManager.getMainBoard().resetScores("deathmatch: "+ChatColor.GREEN+numtime);
-        Score f = ScoreboardManager.getMainBoard().getObjective(DisplaySlot.SIDEBAR).getScore("deathmatch: "+ChatColor.GREEN + ScoreboardManager.getNumberToTimeFormat(time));
-        f.setScore(2);
-    }
-
-    private void refreshKillsMainBoard(Player p) {
-        Score kills = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore("Kills: "+ChatColor.GREEN+ KillListener.getKills(p));
-        Score playersLeft = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore("Players left: "+ChatColor.GREEN+SurvivalGames.arena.getPlayers().size());
-        playersLeft.setScore(4);
-        kills.setScore(5);
+        for (Player p : SurvivalGames.arena.getPlayers()) {
+            int resetTime = time + 1;
+            String numtime = ScoreboardManager.getNumberToTimeFormat(resetTime);
+            p.getScoreboard().resetScores("deathmatch: " + ChatColor.GREEN + numtime);
+            Score f = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore("deathmatch: " + ChatColor.GREEN + ScoreboardManager.getNumberToTimeFormat(time));
+            f.setScore(2);
+        }
     }
 
 }

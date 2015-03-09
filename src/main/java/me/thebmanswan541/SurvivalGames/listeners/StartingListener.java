@@ -8,6 +8,7 @@ import me.thebmanswan541.SurvivalGames.util.Countdown;
 import me.thebmanswan541.SurvivalGames.util.FileManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,6 +34,7 @@ public class StartingListener implements Listener{
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         p.getInventory().clear();
+        p.setGameMode(GameMode.ADVENTURE);
         if (SurvivalGames.arena == null) {
             p.sendMessage(SurvivalGames.tag+ChatColor.RED+"§lPlease create a default arena!");
         } else {
@@ -45,7 +47,7 @@ public class StartingListener implements Listener{
 
                 ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size());
                 e.setJoinMessage(SurvivalGames.tag + ChatColor.GRAY + p.getName() + ChatColor.YELLOW + " joined the game " + ChatColor.YELLOW + "(" + ChatColor.LIGHT_PURPLE + Bukkit.getOnlinePlayers().size() + ChatColor.YELLOW + "/" + ChatColor.LIGHT_PURPLE + Bukkit.getMaxPlayers() + ChatColor.YELLOW + ")!");
-                if (Bukkit.getOnlinePlayers().size() == 1) {
+                if (Bukkit.getOnlinePlayers().size() >= 1) {
                     SurvivalGames.arena.setState(Arena.ArenaState.LOBBY_COUNTDOWN);
                     ScoreboardManager.cancelWaiting();
                     ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size());

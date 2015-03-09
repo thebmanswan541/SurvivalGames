@@ -11,5 +11,8 @@ import org.bukkit.event.Listener;
  * Claiming this project to be created by you is strictly prohibited.
  * **********************************************************
  */
-public class KillandDeathListener implements Listener{
+public class SpectatorListener implements Listener{
+
+
+
 }

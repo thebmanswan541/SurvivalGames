@@ -3,12 +3,10 @@ package me.thebmanswan541.SurvivalGames;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import me.thebmanswan541.SurvivalGames.command.CommandManager;
 import me.thebmanswan541.SurvivalGames.exceptions.ArenaNotFoundException;
-import me.thebmanswan541.SurvivalGames.listeners.KillListener;
-import me.thebmanswan541.SurvivalGames.listeners.KitSelector;
-import me.thebmanswan541.SurvivalGames.listeners.MoveListener;
-import me.thebmanswan541.SurvivalGames.listeners.StartingListener;
+import me.thebmanswan541.SurvivalGames.listeners.*;
 import me.thebmanswan541.SurvivalGames.managers.ArenaManager;
 import me.thebmanswan541.SurvivalGames.util.Arena;
+import me.thebmanswan541.SurvivalGames.util.SpectatorList;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -31,12 +29,14 @@ public class SurvivalGames extends JavaPlugin {
 
     public static String tag = ChatColor.GRAY+"["+ChatColor.RED+"SG"+ChatColor.GRAY+"]: ";
     public static Arena arena;
+    public static SpectatorList spectators;
 
     public void onEnable() {
         ArenaManager.getInstance().setup();
         if (ArenaManager.getInstance().getArenas().size() > 0) {
             arena = ArenaManager.getInstance().getActiveArena();
         }
+        spectators = new SpectatorList();
         getCommand("sg").setExecutor(new CommandManager());
         PluginManager pm = Bukkit.getPluginManager();
         pm.addPermission(CommandManager.sgCommand);
@@ -44,6 +44,8 @@ public class SurvivalGames extends JavaPlugin {
         pm.registerEvents(new MoveListener(), this);
         pm.registerEvents(new KitSelector(), this);
         pm.registerEvents(new KillListener(), this);
+        pm.registerEvents(new Restrictions(), this);
+        pm.registerEvents(new SpectatorListener(), this);
     }
 
     public static Plugin getPlugin() {
