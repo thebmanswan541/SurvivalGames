@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.permissions.Permission;
 
 /**
  * **********************************************************
@@ -29,11 +30,21 @@ public class StartingListener implements Listener{
 
     public static Countdown c;
     public static Countdown d;
+    public static Permission vipPerm = new Permission("sg.vip");
+    public static Permission mvpPerm = new Permission("sg.mvp");
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        if (p.hasPermission(mvpPerm)) {
+            p.setDisplayName(ChatColor.AQUA+p.getName());
+        } else if (p.hasPermission(vipPerm)) {
+            p.setDisplayName(ChatColor.GREEN+p.getName());
+        } else {
+            p.setDisplayName(ChatColor.GRAY+p.getName());
+        }
         p.getInventory().clear();
+        p.getInventory().setItem(8, SurvivalGames.exitToLobby);
         p.setGameMode(GameMode.ADVENTURE);
         if (SurvivalGames.arena == null) {
             p.sendMessage(SurvivalGames.tag+ChatColor.RED+"§lPlease create a default arena!");
@@ -46,16 +57,13 @@ public class StartingListener implements Listener{
                 }
 
                 ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size());
-                e.setJoinMessage(SurvivalGames.tag + ChatColor.GRAY + p.getName() + ChatColor.YELLOW + " joined the game " + ChatColor.YELLOW + "(" + ChatColor.LIGHT_PURPLE + Bukkit.getOnlinePlayers().size() + ChatColor.YELLOW + "/" + ChatColor.LIGHT_PURPLE + Bukkit.getMaxPlayers() + ChatColor.YELLOW + ")!");
-                if (Bukkit.getOnlinePlayers().size() >= 1) {
+                e.setJoinMessage(SurvivalGames.tag + p.getDisplayName() + ChatColor.YELLOW + " joined the game " + ChatColor.YELLOW + "(" + ChatColor.AQUA + Bukkit.getOnlinePlayers().size() + ChatColor.YELLOW + "/" + ChatColor.AQUA + Bukkit.getMaxPlayers() + ChatColor.YELLOW + ")!");
+                if (Bukkit.getOnlinePlayers().size() >= 1 && c == null) {
                     SurvivalGames.arena.setState(Arena.ArenaState.LOBBY_COUNTDOWN);
                     ScoreboardManager.cancelWaiting();
                     ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size());
-                    c = new Countdown(SurvivalGames.arena, 60, 60, 30, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+                    c = new Countdown(SurvivalGames.arena, 30, 30, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
                     c.runTaskTimer(SurvivalGames.getPlugin(), 0, 20);
-                } else if (Bukkit.getOnlinePlayers().size() == 12 && c.getTimeLeft() > 30) {
-                    c.setCountdownTime(30);
-                    ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size());
                 }
             }
         }
@@ -65,11 +73,12 @@ public class StartingListener implements Listener{
     public void onLeave(PlayerQuitEvent e) {
         if (SurvivalGames.arena.isState(Arena.ArenaState.WAITING) || SurvivalGames.arena.isState(Arena.ArenaState.LOBBY_COUNTDOWN)) {
             ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size()-1);
-            e.setQuitMessage(null);
-            if (Bukkit.getOnlinePlayers().size()-1 < 2 && c.getTimeLeft() < 60) {
+            e.setQuitMessage(SurvivalGames.tag+e.getPlayer().getDisplayName()+ChatColor.YELLOW+" has quit!");
+            if (Bukkit.getOnlinePlayers().size()-1 < 2 && c.getTimeLeft() < 30) {
                 SurvivalGames.arena.setState(Arena.ArenaState.WAITING);
                 ScoreboardManager.refreshStartScoreboard(Bukkit.getOnlinePlayers().size() - 1);
                 c.stopCountdown();
+                c = null;
             }
         }
     }

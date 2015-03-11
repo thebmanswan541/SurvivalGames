@@ -87,17 +87,13 @@ public class ScoreboardManager {
         Bukkit.getScheduler().cancelTask(waitingID);
     }
 
-    public static Scoreboard getStartBoard() {
-        return s;
-    }
-
     private static Scoreboard main;
 
     public static void refreshMainScoreboard(Player p) {
         main = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective o = main.registerNewObjective("Main board", "dummy");
         o.setDisplaySlot(DisplaySlot.SIDEBAR);
-        o.setDisplayName(ChatColor.YELLOW+"§lSURVIVAL "+ChatColor.GOLD+"§lGAMES");
+        o.setDisplayName(ChatColor.YELLOW+"§lBLITZ SG");
         Score a = o.getScore("§0");
         Score b = o.getScore("Kills: "+ChatColor.GREEN+ KillListener.getKills(p));
         Score c = o.getScore("Players left: "+ChatColor.GREEN+SurvivalGames.arena.getPlayers().size());
@@ -118,10 +114,6 @@ public class ScoreboardManager {
         f.setScore(2);
         g.setScore(1);
         p.setScoreboard(main);
-    }
-
-    public static Scoreboard getMainBoard() {
-        return main;
     }
 
     public static String getNumberToTimeFormat(int time) {

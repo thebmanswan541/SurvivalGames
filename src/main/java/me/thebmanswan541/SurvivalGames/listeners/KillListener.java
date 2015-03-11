@@ -53,11 +53,10 @@ public class KillListener implements Listener{
             p.getKiller().getScoreboard().resetScores("Kills: "+ChatColor.GREEN+ getKills(p.getKiller()));
             p.getKiller().getScoreboard().resetScores("Players left: "+ChatColor.GREEN+playersLeft);
             kills.put(p.getKiller(), getKills(p.getKiller()) + 1);
-            p.getKiller().sendMessage(SurvivalGames.tag+ChatColor.WHITE+"You killed "+ChatColor.GREEN+p.getName()+ChatColor.WHITE+"!");
-            p.getKiller().sendMessage(SurvivalGames.tag + ChatColor.GOLD + "+40 coins!");
             for (Player pl : Bukkit.getOnlinePlayers()) {
                 refreshBoard(pl);
-                pl.sendMessage(SurvivalGames.tag + ChatColor.YELLOW + p.getName() + ChatColor.RESET + " was killed by " + ChatColor.YELLOW + p.getKiller().getName() + ChatColor.RESET + "! Only " + ChatColor.GREEN + SurvivalGames.arena.getPlayers().size() + ChatColor.RESET + " players remain!");
+                pl.sendMessage(SurvivalGames.tag + p.getDisplayName() + ChatColor.YELLOW + " was killed by " + ChatColor.RESET + p.getKiller().getDisplayName() + ChatColor.YELLOW + "!");
+                pl.sendMessage(SurvivalGames.tag + ChatColor.YELLOW+"There are "+ChatColor.RED+SurvivalGames.arena.getPlayers().size()+ChatColor.YELLOW+" players remaining!");
             }
         }
     }

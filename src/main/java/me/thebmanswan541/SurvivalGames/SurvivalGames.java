@@ -9,12 +9,18 @@ import me.thebmanswan541.SurvivalGames.util.Arena;
 import me.thebmanswan541.SurvivalGames.util.SpectatorList;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.Location;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * **********************************************************
@@ -27,9 +33,17 @@ import org.bukkit.Location;
  */
 public class SurvivalGames extends JavaPlugin {
 
-    public static String tag = ChatColor.GRAY+"["+ChatColor.RED+"SG"+ChatColor.GRAY+"]: ";
+    public static String tag = ChatColor.GRAY+"["+ChatColor.RED+"B-SG"+ChatColor.GRAY+"]: ";
     public static Arena arena;
     public static SpectatorList spectators;
+    public static ItemStack exitToLobby = new ItemStack(Material.BED); {
+        ItemMeta meta = exitToLobby.getItemMeta();
+        meta.setDisplayName(ChatColor.RED+"§lReturn to Lobby"+ChatColor.RESET+ChatColor.GRAY+" (Right Click)");
+        List<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.GRAY+"Right-click to leave to the lobby!");
+        meta.setLore(lore);
+        exitToLobby.setItemMeta(meta);
+    }
 
     public void onEnable() {
         ArenaManager.getInstance().setup();
