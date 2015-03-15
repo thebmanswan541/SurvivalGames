@@ -3,15 +3,18 @@ package me.thebmanswan541.SurvivalGames.listeners;
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
 import me.thebmanswan541.SurvivalGames.util.Arena;
 import me.thebmanswan541.SurvivalGames.util.Deathmatch;
-import me.thebmanswan541.SurvivalGames.util.SpectatorList;
 import net.md_5.bungee.api.ChatColor;
-import net.minecraft.server.v1_8_R1.PacketPlayOutRespawn;
+import net.minecraft.server.v1_8_R1.EnumClientCommand;
+import net.minecraft.server.v1_8_R1.PacketPlayInClientCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Score;
 
@@ -32,33 +35,23 @@ public class KillListener implements Listener{
 
     @EventHandler
     public void onKill(PlayerDeathEvent e) {
-        final Player p = e.getEntity();
-        p.getWorld().strikeLightningEffect(p.getLocation());
+        final Player deadPlayer = e.getEntity();
+        Player killer = e.getEntity().getKiller();
+
         Bukkit.getScheduler().scheduleSyncDelayedTask(SurvivalGames.getPlugin(), new Runnable() {
-            @Override
             public void run() {
-              SurvivalGames.spectators.addPlayer(p);
+                PacketPlayInClientCommand packet = new PacketPlayInClientCommand(EnumClientCommand.PERFORM_RESPAWN);
+                ((CraftPlayer) deadPlayer).getHandle().playerConnection.a(packet);
+                deadPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 4));
+                deadPlayer.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 4));
+                deadPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 3));
             }
-        }, 20L);
-        int playersLeft = SurvivalGames.arena.getPlayers().size();
-        SurvivalGames.arena.removePlayer(p);
-        if (SurvivalGames.arena.getPlayers().size() == 1) {
-            if (SurvivalGames.arena.isState(Arena.ArenaState.DEATHMATCH)) {
-                Deathmatch.getInstance().removePlayer(p);
-            }
-            SurvivalGames.arena.removePlayer(p.getKiller());
-            //TODO: Send players to lobby server
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
-        } else {
-            p.getKiller().getScoreboard().resetScores("Kills: "+ChatColor.GREEN+ getKills(p.getKiller()));
-            p.getKiller().getScoreboard().resetScores("Players left: "+ChatColor.GREEN+playersLeft);
-            kills.put(p.getKiller(), getKills(p.getKiller()) + 1);
-            for (Player pl : Bukkit.getOnlinePlayers()) {
-                refreshBoard(pl);
-                pl.sendMessage(SurvivalGames.tag + p.getDisplayName() + ChatColor.YELLOW + " was killed by " + ChatColor.RESET + p.getKiller().getDisplayName() + ChatColor.YELLOW + "!");
-                pl.sendMessage(SurvivalGames.tag + ChatColor.YELLOW+"There are "+ChatColor.RED+SurvivalGames.arena.getPlayers().size()+ChatColor.YELLOW+" players remaining!");
-            }
-        }
+        }, 20);
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent e) {
+        SurvivalGames.spectators.addPlayer(e.getPlayer());
     }
 
     public static int getKills(Player p) {

@@ -121,7 +121,18 @@ public class ScoreboardManager {
         int timeToTenth = minute*60;
         int second = time-timeToTenth;
         if (second < 10) {
-            return minute+":0"+second;
+            if (minute < 10) {
+                return "0"+minute+":0"+second;
+            } else {
+                return minute + ":0" + second;
+            }
+        }
+        if (minute < 10) {
+            if (second < 10) {
+                return "0"+minute+":0"+second;
+            } else {
+                return "0"+minute+":"+second;
+            }
         }
         return minute+":"+second;
     }

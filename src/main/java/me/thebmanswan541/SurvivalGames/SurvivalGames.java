@@ -6,7 +6,7 @@ import me.thebmanswan541.SurvivalGames.exceptions.ArenaNotFoundException;
 import me.thebmanswan541.SurvivalGames.listeners.*;
 import me.thebmanswan541.SurvivalGames.managers.ArenaManager;
 import me.thebmanswan541.SurvivalGames.util.Arena;
-import me.thebmanswan541.SurvivalGames.util.SpectatorList;
+import me.thebmanswan541.SurvivalGames.managers.SpectatorManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -35,7 +35,7 @@ public class SurvivalGames extends JavaPlugin {
 
     public static String tag = ChatColor.GRAY+"["+ChatColor.RED+"B-SG"+ChatColor.GRAY+"]: ";
     public static Arena arena;
-    public static SpectatorList spectators;
+    public static SpectatorManager spectators;
     public static ItemStack exitToLobby = new ItemStack(Material.BED); {
         ItemMeta meta = exitToLobby.getItemMeta();
         meta.setDisplayName(ChatColor.RED+"§lReturn to Lobby"+ChatColor.RESET+ChatColor.GRAY+" (Right Click)");
@@ -50,7 +50,7 @@ public class SurvivalGames extends JavaPlugin {
         if (ArenaManager.getInstance().getArenas().size() > 0) {
             arena = ArenaManager.getInstance().getActiveArena();
         }
-        spectators = new SpectatorList();
+        spectators = new SpectatorManager();
         getCommand("sg").setExecutor(new CommandManager());
         PluginManager pm = Bukkit.getPluginManager();
         pm.addPermission(CommandManager.sgCommand);

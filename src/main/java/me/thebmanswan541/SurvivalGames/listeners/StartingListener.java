@@ -16,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.permissions.Permission;
+import org.bukkit.potion.PotionEffect;
 
 /**
  * **********************************************************
@@ -46,6 +47,13 @@ public class StartingListener implements Listener{
         p.getInventory().clear();
         p.getInventory().setItem(8, SurvivalGames.exitToLobby);
         p.setGameMode(GameMode.ADVENTURE);
+        for (PotionEffect pl : p.getActivePotionEffects()) {
+            p.removePotionEffect(pl.getType());
+        }
+        SurvivalGames.spectators.setAutoTeleport(p, true);
+        SurvivalGames.spectators.setNightVision(p, true);
+        SurvivalGames.spectators.setShowSpectators(p, false);
+        SurvivalGames.spectators.setAlwaysFlying(p, false);
         if (SurvivalGames.arena == null) {
             p.sendMessage(SurvivalGames.tag+ChatColor.RED+"§lPlease create a default arena!");
         } else {
