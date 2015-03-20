@@ -29,8 +29,9 @@ public class ScoreboardManager {
     public static void refreshStartScoreboard(int numPlayers) {
         s = Bukkit.getScoreboardManager().getNewScoreboard();
         final Objective o = s.registerNewObjective("Start", "dummy");
-        o.setDisplayName(ChatColor.YELLOW+"§lSURVIVAL "+ChatColor.GOLD+"§lGAMES");
         o.setDisplaySlot(DisplaySlot.SIDEBAR);
+        o.setDisplayName(ChatColor.YELLOW+"§lBlitz SG");
+        animateBSGDisplayName(o);
         Score a = o.getScore("§1");
         Score b = o.getScore(ChatColor.WHITE+"Map: "+ChatColor.GREEN+ SurvivalGames.arena.getID());
         Score c = o.getScore(ChatColor.WHITE+"Players: "+ChatColor.GREEN+numPlayers+"/"+Bukkit.getMaxPlayers());
@@ -71,7 +72,7 @@ public class ScoreboardManager {
             }, 0, 20);
         }
         Score f = o.getScore("§4");
-        Score g = o.getScore("www.sgtest.org");
+        Score g = o.getScore("www.hypixel.net");
         g.setScore(1);
         f.setScore(2);
         d.setScore(4);
@@ -135,6 +136,47 @@ public class ScoreboardManager {
             }
         }
         return minute+":"+second;
+    }
+
+    private static void animateBSGDisplayName(final Objective o) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SurvivalGames.getPlugin(), new Runnable() {
+            public void run() {
+                Bukkit.getScheduler().scheduleSyncRepeatingTask(SurvivalGames.getPlugin(), new Runnable() {
+                    int index = 0;
+                    public void run() {
+                        if (index == 0) {
+                            o.setDisplayName(ChatColor.GOLD+"§lB"+ChatColor.YELLOW+"litz SG");
+                            index++;
+                        } else if (index == 1) {
+                            o.setDisplayName(ChatColor.WHITE+"§lB"+ChatColor.GOLD+"l"+ChatColor.YELLOW+"itz SG");
+                            index++;
+                        } else if (index == 2) {
+                            o.setDisplayName(ChatColor.WHITE+"§lBl"+ChatColor.GOLD+"i"+ChatColor.YELLOW+"tz SG");
+                            index++;
+                        } else if (index == 3) {
+                            o.setDisplayName(ChatColor.WHITE+"§lBli"+ChatColor.GOLD+"t"+ChatColor.YELLOW+"z SG");
+                            index++;
+                        } else if (index == 4) {
+                            o.setDisplayName(ChatColor.WHITE+"§lBlitz"+ChatColor.GOLD+" S"+ChatColor.YELLOW+"G");
+                            index++;
+                        } else if (index == 5) {
+                            o.setDisplayName(ChatColor.WHITE+"§lBlitz S"+ChatColor.GOLD+"G");
+                            index++;
+                        } else if (index == 6) {
+                            o.setDisplayName(ChatColor.WHITE+"§lBlitz SG");
+                            index++;
+                        } else if (index == 7) {
+                            Bukkit.getScheduler().scheduleSyncDelayedTask(SurvivalGames.getPlugin(), new Runnable() {
+                                public void run() {
+                                    o.setDisplayName(ChatColor.YELLOW+"§lBlitz SG");
+                                    index++;
+                                }
+                            }, 20);
+                        }
+                    }
+                }, 0, 3);
+            }
+        }, 100);
     }
 
 }

@@ -86,23 +86,23 @@ public class Countdown extends BukkitRunnable {
                 StartingListener.c.runTaskTimer(SurvivalGames.getPlugin(), 0, 20);
                 for (Player p : SurvivalGames.arena.getPlayers()) {
                     p.getInventory().clear();
-                    if (KitSelector.selectedKit.get(p) == null) {
+                    if (KitSelector.getSelectedKit(p) == null) {
                         Random r = new Random();
                         int rkit = r.nextInt(KitManager.getInstance().getKits().size());
-                        KitSelector.selectedKit.put(p, KitManager.getInstance().getKits().get(rkit));
-                        p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You didn't choose a kit so you were assigned to the "+KitSelector.selectedKit.get(p).getName()+ChatColor.YELLOW+" kit.");
-                        p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You will get the items for your "+KitSelector.selectedKit.get(p).getName()+ChatColor.YELLOW+" kit in 60 seconds.");
+                        KitSelector.getMap().put(p, KitManager.getInstance().getKits().get(rkit));
+                        p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You didn't choose a kit so you were assigned to the "+KitSelector.getMap().get(p).getName()+ChatColor.YELLOW+" kit.");
+                        p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You will get the items for your "+KitSelector.getMap().get(p).getName()+ChatColor.YELLOW+" kit in 60 seconds.");
                     } else {
-                        p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You will get the items for your "+KitSelector.selectedKit.get(p).getName()+ChatColor.YELLOW+" kit in 60 seconds.");
+                        p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You will get the items for your "+KitSelector.getMap().get(p).getName()+ChatColor.YELLOW+" kit in 60 seconds.");
                     }
                 }
             } else if (SurvivalGames.arena.isState(Arena.ArenaState.RECEIVE_KIT)) {
                 for (Player p : SurvivalGames.arena.getPlayers()) {
-                    for (ItemStack is : KitSelector.selectedKit.get(p).getItems()) {
+                    for (ItemStack is : KitSelector.getMap().get(p).getItems()) {
                         p.getInventory().addItem(is);
                     }
-                    p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You got your "+KitSelector.selectedKit.get(p).getName()+ChatColor.YELLOW+" kit!");
-                    KitSelector.selectedKit.remove(p);
+                    p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You got your "+KitSelector.getMap().get(p).getName()+ChatColor.YELLOW+" kit!");
+                    KitSelector.getMap().remove(p);
                 }
                 SurvivalGames.arena.setState(Arena.ArenaState.IN_GAME);
                 StartingListener.c.stopCountdown();
@@ -171,7 +171,7 @@ public class Countdown extends BukkitRunnable {
     }
 
     private void refreshTimeOnMainBoard(int time) {
-        for (Player p : SurvivalGames.arena.getPlayers()) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
             int resetTime = time + 1;
             String numtime = ScoreboardManager.getNumberToTimeFormat(resetTime);
             p.getScoreboard().resetScores("deathmatch: " + ChatColor.GREEN + numtime);

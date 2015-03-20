@@ -116,7 +116,7 @@ public class Arena {
      */
     public void removePlayer(Player player) {
         players.remove(player);
-
+        SurvivalGames.spectators.addPlayer(player);
         // TODO: More information below
     }
 

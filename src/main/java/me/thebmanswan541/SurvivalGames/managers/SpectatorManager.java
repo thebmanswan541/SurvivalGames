@@ -1,6 +1,7 @@
 package me.thebmanswan541.SurvivalGames.managers;
 
 import me.thebmanswan541.SurvivalGames.SurvivalGames;
+import me.thebmanswan541.SurvivalGames.listeners.KitSelector;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -8,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -80,7 +82,7 @@ public class SpectatorManager {
 
     public SpectatorManager() {
         this.players = new ArrayList<Player>();
-        this.spectatorGUI = Bukkit.createInventory(null, 27, "Spectator Settings");
+        this.spectatorGUI = Bukkit.createInventory(null, 36, "Spectator Settings");
         this.autoTeleport = new HashMap<Player, Boolean>();
         this.nightVision = new HashMap<Player, Boolean>();
         this.spectators = new HashMap<Player, Boolean>();
@@ -168,6 +170,43 @@ public class SpectatorManager {
         spectatorGUI.setItem(20, autoTeleportIcon);
         spectatorGUI.setItem(21, nightVisionIcon);
         return spectatorGUI;
+    }
+
+    public ArrayList<Inventory> getTeleporterGUI() {
+        //TODO: Add a pages with next/prev page itemstacks
+        ArrayList<Player> alreadyIn = new ArrayList<Player>();
+        ArrayList<Inventory>  invs = new ArrayList<Inventory>();
+        invs.add(Bukkit.createInventory(null, 27, "Teleporter"));
+        int pages = SurvivalGames.arena.getPlayers().size() % 21;
+        for (int i = 0; i < pages; i++) {
+            invs.add(Bukkit.createInventory(null, 27, "Teleporter"));
+        }
+        for (Inventory inv : invs) {
+            inv.setItem(1, new ItemStack(Material.FEATHER));
+            inv.setItem(9, new ItemStack(Material.FEATHER));
+            inv.setItem(18, new ItemStack(Material.FEATHER));
+            inv.setItem(8, new ItemStack(Material.FEATHER));
+            inv.setItem(17, new ItemStack(Material.FEATHER));
+            inv.setItem(26, new ItemStack(Material.FEATHER));
+            for (Player p : SurvivalGames.arena.getPlayers()) {
+                if (!alreadyIn.contains(p)) {
+                    ItemStack player = new ItemStack(Material.SKULL_ITEM); {
+                        SkullMeta meta = (SkullMeta) player.getItemMeta();
+                        meta.setOwner(p.getName());
+                        meta.setDisplayName(p.getDisplayName());
+                        ArrayList<String> lore = new ArrayList<String>();
+                        lore.add(ChatColor.GRAY+"Kit: "+ KitSelector.getSelectedKit(p).getName());
+                        lore.add("§");
+                        lore.add(ChatColor.GRAY+"Click to spectate!");
+                        meta.setLore(lore);
+                        player.setItemMeta(meta);
+                    }
+                    inv.addItem(player);
+                }
+                alreadyIn.add(p);
+            }
+        }
+        return invs;
     }
 
     public boolean hasPlayer(Player player) {

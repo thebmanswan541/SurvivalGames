@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * **********************************************************
@@ -30,7 +31,7 @@ import java.util.List;
  */
 public class KitSelector implements Listener{
 
-    public static HashMap<Player, Kit> selectedKit = new HashMap<Player, Kit>();
+    private static HashMap<Player, Kit> selectedKit = new HashMap<Player, Kit>();
     public static ItemStack kitSelector = new ItemStack(Material.BOW); {
         ItemMeta meta = kitSelector.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN+"Kit Selector "+ChatColor.GRAY+"(Right-Click)");
@@ -61,10 +62,10 @@ public class KitSelector implements Listener{
             if (e.getCurrentItem().getType() != null) {
                 for (Kit kit : KitManager.getInstance().getKits()) {
                     if (e.getCurrentItem().getType() == kit.getKitIcon().getType()) {
-                        if (selectedKit.containsKey(p)) {
-                            selectedKit.remove(p);
+                        if (kitQueueContains(p)) {
+                            getMap().remove(p);
                         }
-                        selectedKit.put(p, kit);
+                        getMap().put(p, kit);
                         p.closeInventory();
                         p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You have chosen the "+ChatColor.GREEN+kit.getName()+ChatColor.YELLOW+" kit. You will get your items 60 seconds after the game starts.");
                         break;
@@ -72,6 +73,22 @@ public class KitSelector implements Listener{
                 }
             }
         }
+    }
+
+    public static Map<Player, Kit> getMap() {
+        return selectedKit;
+    }
+
+    public static Kit getSelectedKit(Player p) {
+        return getMap().get(p);
+    }
+
+    public static void removeFromKitQueue(Player p) {
+        getMap().remove(p);
+    }
+
+    private boolean kitQueueContains(Player p) {
+        return getMap().containsKey(p);
     }
 
 }
