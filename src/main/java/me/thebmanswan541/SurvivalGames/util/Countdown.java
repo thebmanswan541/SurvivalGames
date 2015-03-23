@@ -62,7 +62,7 @@ public class Countdown extends BukkitRunnable {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     SurvivalGames.arena.addPlayer(p);
                     p.getInventory().setItem(0, KitSelector.kitSelector);
-                    p.sendMessage(ChatColor.GREEN + "-----------------------------------------------------");
+                    p.sendMessage(ChatColor.GREEN + "§m-----------------------------------------------------");
                     p.sendMessage("");
                     p.sendMessage(ChatColor.BOLD+"                    Blitz Survival Games");
                     p.sendMessage("");
@@ -70,7 +70,7 @@ public class Countdown extends BukkitRunnable {
                     p.sendMessage(ChatColor.YELLOW+"                   §lmany players as you can!");
                     p.sendMessage(ChatColor.YELLOW+"                        §lLast survivor wins!");
                     p.sendMessage("");
-                    p.sendMessage(ChatColor.GREEN + "-----------------------------------------------------");
+                    p.sendMessage(ChatColor.GREEN + "§m-----------------------------------------------------");
                     p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"You will be able to move in 30 seconds! Choose a kit by right-clicking the bow!");
                     p.sendMessage(SurvivalGames.tag+ChatColor.YELLOW+"The games have begun!");
                 }
